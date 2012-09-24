@@ -67,70 +67,6 @@ public class Database {
 	}
 
 	/**
-	 * 获取指定列的最大值
-	 * 
-	 * @param table
-	 *          表名
-	 * @param key
-	 *          列名
-	 * @return
-	 * @throws SQLException
-	 */
-	public long max(String table, String key) throws SQLException {
-
-		if (table == null || key == null) {
-
-			return 0L;
-
-		}
-
-		table = table.trim();
-
-		key = key.trim();
-
-		if (table.length() == 0 || key.length() == 0) {
-
-			return 0L;
-
-		}
-
-		String sql = "SELECT MAX(?) FROM " + table;
-
-		Connection conn = null;
-
-		PreparedStatement ps = null;
-
-		ResultSet rs = null;
-
-		try {
-
-			conn = getConnection();
-
-			ps = conn.prepareStatement(sql);
-
-			rs = ps.executeQuery();
-
-			if (rs.next()) {
-
-				return rs.getLong(1);
-
-			}
-
-		} catch (SQLException ex) {
-
-			throw ex;
-
-		} finally {
-
-			close(rs, ps, conn);
-
-		}
-
-		return 0L;
-
-	}
-
-	/**
 	 * 把连接加入连接池
 	 * 
 	 * @param conn
@@ -2015,5 +1951,69 @@ public class Database {
 		return rows;
 
 	}
+
+	/**
+   * 获取指定列的最大值
+   * 
+   * @param table
+   *          表名
+   * @param key
+   *          列名
+   * @return
+   * @throws SQLException
+   */
+  public long max(String table, String key) throws SQLException {
+  
+  	if (table == null || key == null) {
+  
+  		return 0L;
+  
+  	}
+  
+  	table = table.trim();
+  
+  	key = key.trim();
+  
+  	if (table.length() == 0 || key.length() == 0) {
+  
+  		return 0L;
+  
+  	}
+  
+  	String sql = "SELECT MAX(" + key + ") FROM " + table;
+  
+  	Connection conn = null;
+  
+  	PreparedStatement ps = null;
+  
+  	ResultSet rs = null;
+  
+  	try {
+  
+  		conn = getConnection();
+  
+  		ps = conn.prepareStatement(sql);
+  
+  		rs = ps.executeQuery();
+  
+  		if (rs.next()) {
+  
+  			return rs.getLong(1);
+  
+  		}
+  
+  	} catch (SQLException ex) {
+  
+  		throw ex;
+  
+  	} finally {
+  
+  		close(rs, ps, conn);
+  
+  	}
+  
+  	return 0L;
+  
+  }
 
 }
