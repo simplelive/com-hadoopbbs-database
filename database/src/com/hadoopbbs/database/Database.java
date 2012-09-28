@@ -24,6 +24,8 @@ public class Database {
 
 	public static Vector POOL = new Vector(); // 连接池
 
+	public static int POOL_SIZE = 100; // 连接池最多连接数
+
 	public static String DRIVER; // 驱动类
 
 	public static String URL; // 连接地址
@@ -80,7 +82,21 @@ public class Database {
 
 		}
 
-		POOL.add(conn);
+		if (POOL.size() > POOL_SIZE) {
+
+			try {
+
+				conn.close();
+
+			} catch (SQLException ex) {
+
+			}
+
+		} else {
+
+			POOL.add(conn);
+
+		}
 
 	}
 
