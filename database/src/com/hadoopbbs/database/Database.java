@@ -1,5 +1,6 @@
 package com.hadoopbbs.database;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,7 +25,7 @@ public class Database {
 
 	public static Vector POOL = new Vector(); // 连接池
 
-	public static int POOL_SIZE = 100; // 连接池最多连接数
+	public static int SIZE = 10; // 连接池最多保存的连接数
 
 	public static String DRIVER; // 驱动类
 
@@ -40,11 +41,20 @@ public class Database {
 
 		try {
 
-			prop.load(Database.class.getResourceAsStream("Database.properties")); // 读取配置属性
+			prop.load(Database.class.getResourceAsStream("Database.properties"));
+			// // 读取配置属性
 
 		} catch (IOException ex) {
 
 			throw new RuntimeException(ex);
+
+		}
+
+		try {
+
+			SIZE = Integer.valueOf(prop.getProperty("SIZE").trim());
+
+		} catch (Exception ex) {
 
 		}
 
@@ -82,7 +92,7 @@ public class Database {
 
 		}
 
-		if (POOL.size() > POOL_SIZE) {
+		if (POOL.size() > SIZE) {
 
 			try {
 
@@ -97,6 +107,12 @@ public class Database {
 			POOL.add(conn);
 
 		}
+
+	}
+
+	public static void main(String[] args) {
+
+		System.out.println(SIZE);
 
 	}
 
