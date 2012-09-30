@@ -1,6 +1,5 @@
 package com.hadoopbbs.database;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -78,6 +77,12 @@ public class Database {
 
 	}
 
+	public static void main(String[] args) {
+
+		System.out.println(SIZE);
+
+	}
+
 	/**
 	 * 把连接加入连接池
 	 * 
@@ -107,12 +112,6 @@ public class Database {
 			POOL.add(conn);
 
 		}
-
-	}
-
-	public static void main(String[] args) {
-
-		System.out.println(SIZE);
 
 	}
 
