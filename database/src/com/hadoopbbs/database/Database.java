@@ -84,7 +84,7 @@ public class Database {
 	}
 
 	/**
-	 * 把连接加入连接池
+	 * 连接返回连接池或关闭
 	 * 
 	 * @param conn
 	 *          Connection
@@ -123,9 +123,7 @@ public class Database {
 	 */
 	public void close(PreparedStatement ps) {
 
-		if (ps == null)
-
-			close(ps, null);
+		close(ps, null);
 
 	}
 
@@ -138,12 +136,6 @@ public class Database {
 	 *          Connection
 	 */
 	public void close(PreparedStatement ps, Connection conn) {
-
-		if (ps == null && conn == null) {
-
-			return;
-
-		}
 
 		close(null, ps, conn);
 
