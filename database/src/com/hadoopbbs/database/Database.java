@@ -1754,6 +1754,18 @@ public class Database {
 
 	}
 
+	/**
+	 * 按表名、字段名及多个字段值条件、排序字段名、排序是否为倒序、最大返回记录数等进行查询
+	 * 
+	 * @param table
+	 * @param whereKey
+	 * @param whereValues
+	 * @param orderKey
+	 * @param orderDesc
+	 * @param maxRows
+	 * @return
+	 * @throws SQLException
+	 */
 	public ArrayList select(String table, String whereKey, Object[] whereValues, String orderKey, boolean orderDesc, int maxRows) throws SQLException {
 
 		ArrayList rows = new ArrayList();
