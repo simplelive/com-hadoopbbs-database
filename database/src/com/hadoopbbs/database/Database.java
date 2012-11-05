@@ -892,19 +892,27 @@ public class Database {
 				cols = row.keySet().toArray(); // 列
 
 				sql = new StringBuilder("INSERT INTO ");
+
 				sql.append(table);
+
 				sql.append("(");
+
 				sql.append(cols[0]);
 
 				for (int i = 1; i < cols.length; i++) {
+
 					sql.append(",");
+
 					sql.append(cols[i]);
+
 				}
 
 				sql.append(") VALUES(?");
 
 				for (int i = 1; i < cols.length; i++) {
+
 					sql.append(",?");
+
 				}
 
 				sql.append(")");
@@ -912,7 +920,9 @@ public class Database {
 				ps = conn.prepareStatement(sql.toString());
 
 				for (int i = 0; i < cols.length; i++) {
+
 					ps.setObject(i + 1, row.get(cols[i]));
+
 				}
 
 				ps.execute();
@@ -1912,21 +1922,13 @@ public class Database {
 
 	}
 
-	/**
-	 * 按多个字段值更新多个字段值
-	 * 
-	 * @param table
-	 * @param set
-	 * @param where
-	 * @throws SQLException
-	 */
+	public void update(String table, HashMap set) throws SQLException {
+
+		update(table, set, null, true);
+
+	}
+
 	public void update(String table, HashMap set, HashMap where) throws SQLException {
-
-		if (table == null || set == null || set.isEmpty() || where == null || where.isEmpty()) {
-
-			return;
-
-		}
 
 		update(table, set, where, true);
 
@@ -1943,7 +1945,15 @@ public class Database {
 	 */
 	public void update(String table, HashMap set, HashMap where, boolean and) throws SQLException {
 
-		if (table == null || set == null || set.isEmpty() || where == null || where.isEmpty()) {
+		if (table == null || set == null || set.isEmpty()) {
+
+			return;
+
+		}
+
+		table = table.trim();
+
+		if (table.length() == 0) {
 
 			return;
 
@@ -1952,39 +1962,56 @@ public class Database {
 		StringBuilder sql = new StringBuilder();
 
 		sql.append("UPDATE ");
+
 		sql.append(table);
+
 		sql.append(" SET ");
 
 		Object[] sk = set.keySet().toArray();
 
 		sql.append(sk[0]);
+
 		sql.append("=?");
 
 		for (int i = 1; i < sk.length; i++) {
 
 			sql.append(", ");
+
 			sql.append(sk[i]);
+
 			sql.append("=?");
 
 		}
 
-		sql.append(" WHERE ");
+		Object[] wk = null;
 
-		Object[] wk = where.keySet().toArray();
+		if (where != null && where.size() > 0) {
 
-		sql.append(wk[0]);
-		sql.append("=?");
+			sql.append(" WHERE ");
 
-		for (int i = 1; i < wk.length; i++) {
+			wk = where.keySet().toArray();
 
-			if (and) {
-				sql.append(" AND ");
-			} else {
-				sql.append(" OR ");
-			}
+			sql.append(wk[0]);
 
-			sql.append(wk[i]);
 			sql.append("=?");
+
+			for (int i = 1; i < wk.length; i++) {
+
+				if (and) {
+
+					sql.append(" AND ");
+
+				} else {
+
+					sql.append(" OR ");
+
+				}
+
+				sql.append(wk[i]);
+
+				sql.append("=?");
+
+			}
 
 		}
 
@@ -2005,11 +2032,19 @@ public class Database {
 			int idx = 1;
 
 			for (int i = 0; i < sk.length; i++) {
+
 				ps.setObject(idx++, set.get(sk[i]));
+
 			}
 
-			for (int i = 0; i < wk.length; i++) {
-				ps.setObject(idx++, where.get(wk[i]));
+			if (wk != null) {
+
+				for (int i = 0; i < wk.length; i++) {
+
+					ps.setObject(idx++, where.get(wk[i]));
+
+				}
+
 			}
 
 			ps.execute();
@@ -2040,28 +2075,19 @@ public class Database {
 
 	}
 
-	/**
-	 * 按单个字段值更新多个字段值
-	 * 
-	 * @param table
-	 * @param set
-	 * @param whereKey
-	 * @param whereValue
-	 * @throws SQLException
-	 */
 	public void update(String table, HashMap set, String whereKey, Object whereValue) throws SQLException {
 
-		if (table == null || set == null || set.isEmpty() || whereKey == null) {
+		Object[] whereValues = null;
 
-			return;
+		if (whereKey != null) {
+
+			whereValues = new Object[1];
+
+			whereValues[0] = whereValue;
 
 		}
 
-		HashMap where = new HashMap();
-
-		where.put(whereKey, whereValue);
-
-		update(table, set, where);
+		update(table, set, whereKey, whereValues);
 
 	}
 
@@ -2070,13 +2096,21 @@ public class Database {
 	 * 
 	 * @param table
 	 * @param set
-	 * @param key
-	 * @param values
+	 * @param whereKey
+	 * @param whereValues
 	 * @throws SQLException
 	 */
-	public void update(String table, HashMap set, String key, Object[] values) throws SQLException {
+	public void update(String table, HashMap set, String whereKey, Object[] whereValues) throws SQLException {
 
-		if (table == null || set == null || set.isEmpty() || key == null || values == null || values.length == 0) {
+		if (table == null || set == null || set.isEmpty()) {
+
+			return;
+
+		}
+
+		table = table.trim();
+
+		if (table.length() == 0) {
 
 			return;
 
@@ -2085,31 +2119,44 @@ public class Database {
 		StringBuilder sql = new StringBuilder();
 
 		sql.append("UPDATE ");
+
 		sql.append(table);
+
 		sql.append(" SET ");
 
 		Object[] sk = set.keySet().toArray();
 
 		sql.append(sk[0]);
+
 		sql.append("=?");
 
 		for (int i = 1; i < sk.length; i++) {
+
 			sql.append(",");
+
 			sql.append(sk[i]);
+
 			sql.append("=?");
-		}
-
-		sql.append(" WHERE ");
-		sql.append(key);
-		sql.append(" IN (?");
-
-		for (int i = 1; i < values.length; i++) {
-
-			sql.append(",?");
 
 		}
 
-		sql.append(")");
+		if (whereKey != null && whereValues != null && whereValues.length > 0) {
+
+			sql.append(" WHERE ");
+
+			sql.append(whereKey);
+
+			sql.append(" IN (?");
+
+			for (int i = 1; i < whereValues.length; i++) {
+
+				sql.append(",?");
+
+			}
+
+			sql.append(")");
+
+		}
 
 		// System.out.println(sql);
 
@@ -2128,11 +2175,19 @@ public class Database {
 			int idx = 1;
 
 			for (int i = 0; i < sk.length; i++) {
+
 				ps.setObject(idx++, set.get(sk[i]));
+
 			}
 
-			for (int i = 0; i < values.length; i++) {
-				ps.setObject(idx++, values[i]);
+			if (whereKey != null && whereValues != null && whereValues.length > 0) {
+
+				for (int i = 0; i < whereValues.length; i++) {
+
+					ps.setObject(idx++, whereValues[i]);
+
+				}
+
 			}
 
 			ps.execute();
@@ -2163,40 +2218,31 @@ public class Database {
 
 	}
 
-	/**
-	 * 按多个字段值更新记录
-	 * 
-	 * @param table
-	 * @param setKey
-	 * @param setValue
-	 * @param where
-	 * @throws SQLException
-	 */
+	public void update(String table, String setKey, Object setValue) throws SQLException {
+
+		update(table, setKey, setValue, null, true);
+
+	}
+
 	public void update(String table, String setKey, Object setValue, HashMap where) throws SQLException {
-
-		if (table == null || setKey == null || where == null || where.isEmpty()) {
-
-			return;
-
-		}
 
 		update(table, setKey, setValue, where, true);
 
 	}
 
-	/**
-	 * 按多个字段值更新记录
-	 * 
-	 * @param table
-	 * @param setKey
-	 * @param setValue
-	 * @param where
-	 * @param and
-	 * @throws SQLException
-	 */
 	public void update(String table, String setKey, Object setValue, HashMap where, boolean and) throws SQLException {
 
-		if (table == null || setKey == null || where == null || where.isEmpty()) {
+		if (table == null || setKey == null) {
+
+			return;
+
+		}
+
+		table = table.trim();
+
+		setKey = setKey.trim();
+
+		if (table.length() == 0 || setKey.length() == 0) {
 
 			return;
 
@@ -2206,7 +2252,7 @@ public class Database {
 
 		set.put(setKey, setValue);
 
-		update(table, set, where);
+		update(table, set, where, and);
 
 	}
 
@@ -2214,30 +2260,26 @@ public class Database {
 	 * 按单个字段值更新记录
 	 * 
 	 * @param table
-	 * @param key
-	 * @param value
+	 * @param whereKey
+	 * @param whereValue
 	 * @param setKey
 	 * @param setValue
 	 * @throws SQLException
 	 */
 
-	public void update(String table, String setKey, Object setValue, String key, Object value) throws SQLException {
+	public void update(String table, String setKey, Object setValue, String whereKey, Object whereValue) throws SQLException {
 
-		if (table == null || setKey == null || key == null) {
+		HashMap where = null;
 
-			return;
+		if (whereKey != null) {
+
+			where = new HashMap();
+
+			where.put(whereKey, whereValue);
 
 		}
 
-		HashMap where = new HashMap();
-
-		where.put(key, value);
-
-		HashMap set = new HashMap();
-
-		set.put(setKey, setValue);
-
-		update(table, set, where);
+		update(table, setKey, setValue, where, true);
 
 	}
 
@@ -2247,13 +2289,23 @@ public class Database {
 	 * @param table
 	 * @param setKey
 	 * @param setValue
-	 * @param key
-	 * @param values
+	 * @param whereKey
+	 * @param whereValues
 	 * @throws SQLException
 	 */
-	public void update(String table, String setKey, Object setValue, String key, Object[] values) throws SQLException {
+	public void update(String table, String setKey, Object setValue, String whereKey, Object[] whereValues) throws SQLException {
 
-		if (table == null || setKey == null || key == null || values == null || values.length == 0) {
+		if (table == null || setKey == null) {
+
+			return;
+
+		}
+
+		table = table.trim();
+
+		setKey = setKey.trim();
+
+		if (table.length() == 0 || setKey.length() == 0) {
 
 			return;
 
@@ -2263,7 +2315,7 @@ public class Database {
 
 		set.put(setKey, setValue);
 
-		update(table, set, key, values);
+		update(table, set, whereKey, whereValues);
 
 	}
 
