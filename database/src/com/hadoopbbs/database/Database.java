@@ -1427,110 +1427,101 @@ public class Database {
 
 	}
 
-	/**
-	 * 按表名、字段名及字段值对查询
-	 * 
-	 * @param table
-	 * @param where
-	 * @return
-	 * @throws SQLException
-	 */
 	public ArrayList select(String table, HashMap where) throws SQLException {
 
-		if (table == null || where == null || where.isEmpty()) {
-
-			return new ArrayList();
-
-		}
-
-		return select(table, where, true);
+		return select(table, where, true, null, false, 0);
 
 	}
 
-	/**
-	 * 按表名、字段名及字段值对查询
-	 * 
-	 * @param table
-	 * @param where
-	 * @param and
-	 * @return
-	 * @throws SQLException
-	 */
 	public ArrayList select(String table, HashMap where, boolean and) throws SQLException {
 
-		return select(table, where, and, null);
+		return select(table, where, and, null, false, 0);
 
 	}
 
-	/**
-	 * 按表名、字段名及字段值对查询
-	 * 
-	 * @param table
-	 * @param where
-	 * @param and
-	 * @return
-	 * @throws SQLException
-	 */
+	public ArrayList select(String table, HashMap where, boolean and, int maxRows) throws SQLException {
+
+		return select(table, where, and, null, false, maxRows);
+
+	}
+
 	public ArrayList select(String table, HashMap where, boolean and, String orderKey) throws SQLException {
 
-		return select(table, where, and, orderKey, false);
+		return select(table, where, and, orderKey, false, 0);
+
+	}
+
+	public ArrayList select(String table, HashMap where, boolean and, String orderKey, boolean orderDesc) throws SQLException {
+
+		return select(table, where, and, orderKey, orderDesc, 0);
 
 	}
 
 	/**
-	 * 按表名、字段名及字段值对查询
+	 * 按表名、字段名及字段值条件、条件是否为AND、排序字段名、排序是否为倒序、最大返回记录数等进行查询
 	 * 
 	 * @param table
+	 *          表名
 	 * @param where
+	 *          字段名及字段值条件
 	 * @param and
+	 *          条件是否为AND
+	 * @param orderKey
+	 *          排序字段名
+	 * @param desc
+	 *          排序是否为倒序
+	 * @param maxRows
+	 *          最大返回记录数
 	 * @return
 	 * @throws SQLException
 	 */
-	public ArrayList select(String table, HashMap where, boolean and, String orderKey, boolean desc) throws SQLException {
-
-		return select(table, where, and, orderKey, desc, 0);
-
-	}
-
-	/**
-	 * 按表名、字段名及字段值对查询
-	 * 
-	 * @param table
-	 * @param where
-	 * @param and
-	 * @return
-	 * @throws SQLException
-	 */
-	public ArrayList select(String table, HashMap where, boolean and, String orderKey, boolean desc, int maxRows) throws SQLException {
+	public ArrayList select(String table, HashMap where, boolean and, String orderKey, boolean orderDesc, int maxRows) throws SQLException {
 
 		ArrayList rows = new ArrayList();
 
-		if (table == null || where == null || where.isEmpty()) {
+		if (table == null) {
+
+			return rows;
+
+		}
+
+		table = table.trim();
+
+		if (table.length() == 0) {
 
 			return rows;
 
 		}
 
 		StringBuilder sql = new StringBuilder();
+
 		sql.append("SELECT * FROM ");
+
 		sql.append(table);
-		sql.append(" WHERE ");
 
-		Object[] whereKeys = where.keySet().toArray();
+		Object[] whereKeys = null;
 
-		sql.append(whereKeys[0]);
-		sql.append("=?");
+		if (where != null && where.size() > 0) {
 
-		for (int i = 1; i < whereKeys.length; i++) {
+			sql.append(" WHERE ");
 
-			if (and) {
-				sql.append(" AND ");
-			} else {
-				sql.append(" OR ");
-			}
+			whereKeys = where.keySet().toArray();
 
-			sql.append(whereKeys[i]);
+			sql.append(whereKeys[0]);
 			sql.append("=?");
+
+			for (int i = 1; i < whereKeys.length; i++) {
+
+				if (and) {
+					sql.append(" AND ");
+				} else {
+					sql.append(" OR ");
+				}
+
+				sql.append(whereKeys[i]);
+				sql.append("=?");
+
+			}
 
 		}
 
@@ -1540,7 +1531,7 @@ public class Database {
 
 			sql.append(orderKey.trim());
 
-			if (desc) {
+			if (orderDesc) {
 
 				sql.append(" DESC");
 
@@ -1562,11 +1553,15 @@ public class Database {
 
 			int idx = 1;
 
-			ps.setObject(idx++, where.get(whereKeys[0]));
+			if (whereKeys != null) {
 
-			for (int i = 1; i < whereKeys.length; i++) {
+				ps.setObject(idx++, where.get(whereKeys[0]));
 
-				ps.setObject(idx++, where.get(whereKeys[i]));
+				for (int i = 1; i < whereKeys.length; i++) {
+
+					ps.setObject(idx++, where.get(whereKeys[i]));
+
+				}
 
 			}
 
@@ -1594,48 +1589,39 @@ public class Database {
 
 	}
 
-	/**
-	 * 按表名、字段名及字段值对查询
-	 * 
-	 * @param table
-	 * @param where
-	 * @param and
-	 * @return
-	 * @throws SQLException
-	 */
+	public ArrayList select(String table, HashMap where, boolean and, String orderKey, int maxRows) throws SQLException {
+
+		return select(table, where, and, orderKey, false, maxRows);
+
+	}
+
+	public ArrayList select(String table, HashMap where, int maxRows) throws SQLException {
+
+		return select(table, where, true, null, false, maxRows);
+
+	}
+
 	public ArrayList select(String table, HashMap where, String orderKey) throws SQLException {
 
-		return select(table, where, orderKey, false);
+		return select(table, where, true, orderKey, false, 0);
 
 	}
 
-	/**
-	 * 按表名、字段名及字段值对查询
-	 * 
-	 * @param table
-	 * @param where
-	 * @param and
-	 * @return
-	 * @throws SQLException
-	 */
-	public ArrayList select(String table, HashMap where, String orderKey, boolean desc) throws SQLException {
+	public ArrayList select(String table, HashMap where, String orderKey, boolean orderDesc) throws SQLException {
 
-		return select(table, where, orderKey, desc);
+		return select(table, where, orderKey, orderDesc);
 
 	}
 
-	/**
-	 * 按表名、字段名及字段值对查询
-	 * 
-	 * @param table
-	 * @param where
-	 * @param and
-	 * @return
-	 * @throws SQLException
-	 */
-	public ArrayList select(String table, HashMap where, String orderKey, boolean desc, int maxRows) throws SQLException {
+	public ArrayList select(String table, HashMap where, String orderKey, boolean orderDesc, int maxRows) throws SQLException {
 
-		return select(table, where, true, orderKey, desc, maxRows);
+		return select(table, where, true, orderKey, orderDesc, maxRows);
+
+	}
+
+	public ArrayList select(String table, HashMap where, String orderKey, int maxRows) throws SQLException {
+
+		return select(table, where, true, orderKey, false, maxRows);
 
 	}
 
@@ -1692,135 +1678,95 @@ public class Database {
 
 	}
 
-	/**
-	 * 按指定字段值查询
-	 * 
-	 * @param table
-	 * @param key
-	 * @param value
-	 * @return
-	 * @throws SQLException
-	 */
-	public ArrayList select(String table, String key, Object value) throws SQLException {
+	public ArrayList select(String table, String whereKey, Object whereValue) throws SQLException {
 
-		return select(table, key, value, null);
+		return select(table, whereKey, whereValue, null, false, 0);
 
 	}
 
-	/**
-	 * 按指定字段值查询
-	 * 
-	 * @param table
-	 * @param key
-	 * @param value
-	 * @return
-	 * @throws SQLException
-	 */
-	public ArrayList select(String table, String key, Object value, String orderKey) throws SQLException {
+	public ArrayList select(String table, String whereKey, Object whereValue, int maxRows) throws SQLException {
 
-		return select(table, key, value, orderKey, false);
+		return select(table, whereKey, whereValue, null, false, maxRows);
 
 	}
 
-	/**
-	 * 按指定字段值查询
-	 * 
-	 * @param table
-	 * @param key
-	 * @param value
-	 * @return
-	 * @throws SQLException
-	 */
-	public ArrayList select(String table, String key, Object value, String orderKey, boolean desc) throws SQLException {
+	public ArrayList select(String table, String whereKey, Object whereValue, String orderKey) throws SQLException {
 
-		return select(table, key, value, orderKey, desc, 0);
+		return select(table, whereKey, whereValue, orderKey, false, 0);
 
 	}
 
-	/**
-	 * 按指定字段值查询
-	 * 
-	 * @param table
-	 * @param key
-	 * @param value
-	 * @return
-	 * @throws SQLException
-	 */
-	public ArrayList select(String table, String key, Object value, String orderKey, boolean desc, int maxRows) throws SQLException {
+	public ArrayList select(String table, String whereKey, Object whereValue, String orderKey, boolean orderDesc) throws SQLException {
 
-		if (table == null || key == null) {
+		return select(table, whereKey, whereValue, orderKey, orderDesc, 0);
+
+	}
+
+	public ArrayList select(String table, String whereKey, Object whereValue, String orderKey, boolean orderDesc, int maxRows) throws SQLException {
+
+		if (table == null) {
 
 			return null;
 
 		}
 
-		HashMap where = new HashMap();
+		HashMap where = null;
 
-		where.put(key, value);
+		if (whereKey != null) {
 
-		return select(table, where, orderKey, desc, maxRows);
+			where = new HashMap();
 
-	}
+			where.put(whereKey, whereValue);
 
-	/**
-	 * 按单个字段的多个值查询记录
-	 * 
-	 * @param table
-	 * @param key
-	 * @param values
-	 * @return
-	 * @throws SQLException
-	 */
-	public ArrayList select(String table, String key, Object[] values) throws SQLException {
+		}
 
-		return select(table, key, values, null);
+		return select(table, where, true, orderKey, orderDesc, maxRows);
 
 	}
 
-	/**
-	 * 按单个字段的多个值查询记录
-	 * 
-	 * @param table
-	 * @param key
-	 * @param values
-	 * @return
-	 * @throws SQLException
-	 */
-	public ArrayList select(String table, String key, Object[] values, String orderKey) throws SQLException {
+	public ArrayList select(String table, String whereKey, Object whereValue, String orderKey, int maxRows) throws SQLException {
 
-		return select(table, key, values, orderKey, false);
+		return select(table, whereKey, whereValue, orderKey, false, maxRows);
 
 	}
 
-	/**
-	 * 按单个字段的多个值查询记录
-	 * 
-	 * @param table
-	 * @param key
-	 * @param values
-	 * @return
-	 * @throws SQLException
-	 */
-	public ArrayList select(String table, String key, Object[] values, String orderKey, boolean desc) throws SQLException {
+	public ArrayList select(String table, String whereKey, Object[] whereValues) throws SQLException {
 
-		return select(table, key, values, orderKey, desc, 0);
+		return select(table, whereKey, whereValues, null, false, 0);
 
 	}
 
-	/**
-	 * 按单个字段的多个值查询记录
-	 * 
-	 * @param table
-	 * @param key
-	 * @param values
-	 * @return
-	 * @throws SQLException
-	 */
-	public ArrayList select(String table, String key, Object[] values, String orderKey, boolean desc, int maxRows) throws SQLException {
+	public ArrayList select(String table, String whereKey, Object[] whereValues, int maxRows) throws SQLException {
+
+		return select(table, whereKey, whereValues, null, false, maxRows);
+
+	}
+
+	public ArrayList select(String table, String whereKey, Object[] whereValues, String orderKey) throws SQLException {
+
+		return select(table, whereKey, whereValues, orderKey, false, 0);
+
+	}
+
+	public ArrayList select(String table, String key, Object[] values, String orderKey, boolean orderDesc) throws SQLException {
+
+		return select(table, key, values, orderKey, orderDesc, 0);
+
+	}
+
+	public ArrayList select(String table, String whereKey, Object[] whereValues, String orderKey, boolean orderDesc, int maxRows) throws SQLException {
 
 		ArrayList rows = new ArrayList();
 
-		if (table == null || key == null || values == null || values.length == 0) {
+		if (table == null) {
+
+			return rows;
+
+		}
+
+		table = table.trim();
+
+		if (table.length() == 0) {
 
 			return rows;
 
@@ -1829,18 +1775,40 @@ public class Database {
 		StringBuilder sql = new StringBuilder();
 
 		sql.append("SELECT * FROM ");
+
 		sql.append(table);
-		sql.append(" WHERE ");
-		sql.append(key);
-		sql.append(" IN (?");
 
-		for (int i = 1; i < values.length; i++) {
+		if (whereKey != null && whereValues != null && whereValues.length > 0) {
 
-			sql.append(",?");
+			sql.append(" WHERE ");
+
+			sql.append(whereKey);
+
+			sql.append(" IN (?");
+
+			for (int i = 1; i < whereValues.length; i++) {
+
+				sql.append(",?");
+
+			}
+
+			sql.append(")");
 
 		}
 
-		sql.append(")");
+		if (orderKey != null) {
+
+			sql.append(" ORDER BY ");
+
+			sql.append(orderKey.trim());
+
+			if (orderDesc) {
+
+				sql.append(" DESC");
+
+			}
+
+		}
 
 		// System.out.println(sql.toString());
 
@@ -1858,11 +1826,15 @@ public class Database {
 
 			int idx = 1;
 
-			ps.setObject(idx++, values[0]);
+			if (whereKey != null && whereValues != null && whereValues.length > 0) {
 
-			for (int i = 1; i < values.length; i++) {
+				ps.setObject(idx++, whereValues[0]);
 
-				ps.setObject(idx++, values[i]);
+				for (int i = 1; i < whereValues.length; i++) {
+
+					ps.setObject(idx++, whereValues[i]);
+
+				}
 
 			}
 
@@ -1887,6 +1859,12 @@ public class Database {
 		}
 
 		return rows;
+
+	}
+
+	public ArrayList select(String table, String whereKey, Object[] whereValues, String orderKey, int maxRows) throws SQLException {
+
+		return select(table, whereKey, whereValues, orderKey, false, maxRows);
 
 	}
 
