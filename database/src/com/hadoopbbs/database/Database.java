@@ -87,9 +87,7 @@ public class Database {
 
 		try {
 
-			ArrayList list = db.top("zcarticle", "id", "type", 5);
-
-			System.out.println(list);
+			db.delete("zcarticle", "type", null);
 
 		} catch (SQLException ex) {
 
@@ -225,6 +223,14 @@ public class Database {
 		int count = 0;
 
 		if (sql == null) {
+
+			return count;
+
+		}
+
+		sql = sql.trim();
+
+		if (sql.length() == 0) {
 
 			return count;
 
@@ -374,17 +380,7 @@ public class Database {
 
 	public int count(String table, String whereKey, Object whereValue) throws SQLException {
 
-		HashMap where = null;
-
-		if (whereKey != null) {
-
-			where = new HashMap();
-
-			where.put(whereKey, whereValue);
-
-		}
-
-		return count(table, where);
+		return count(table, whereKey, new Object[] { whereValue });
 
 	}
 
@@ -399,27 +395,53 @@ public class Database {
 	 */
 	public int count(String table, String key, Object[] values) throws SQLException {
 
-		if (table == null || key == null || values == null || values.length == 0) {
+		if (table == null) {
 
 			return 0;
+
+		}
+
+		if (key != null) {
+
+			key = key.trim();
+
+			if (key.length() == 0) {
+
+				key = null;
+
+			}
+
+		}
+
+		if (values == null) {
+
+			values = new Object[] { null };
 
 		}
 
 		StringBuilder sql = new StringBuilder();
 
 		sql.append("SELECT COUNT(*) FROM ");
+
 		sql.append(table);
-		sql.append(" WHERE ");
-		sql.append(key);
-		sql.append(" IN (?");
 
-		for (int i = 1; i < values.length; i++) {
+		if (key != null && values.length > 0) {
 
-			sql.append(",?");
+			sql.append(" WHERE ");
+
+			sql.append(key);
+
+			sql.append(" IN (?");
+
+			for (int i = 1; i < values.length; i++) {
+
+				sql.append(",?");
+
+			}
+
+			sql.append(")");
 
 		}
-
-		sql.append(")");
 
 		// System.out.println(sql.toString());
 
@@ -437,11 +459,15 @@ public class Database {
 
 			int idx = 1;
 
-			ps.setObject(idx++, values[0]);
+			if (key != null && values.length > 0) {
 
-			for (int i = 1; i < values.length; i++) {
+				ps.setObject(idx++, values[0]);
 
-				ps.setObject(idx++, values[i]);
+				for (int i = 1; i < values.length; i++) {
+
+					ps.setObject(idx++, values[i]);
+
+				}
 
 			}
 
@@ -597,11 +623,7 @@ public class Database {
 
 		}
 
-		HashMap row = new HashMap();
-
-		row.put(key, value);
-
-		delete(table, row);
+		delete(table, key, new Object[] { value });
 
 	}
 
@@ -615,7 +637,19 @@ public class Database {
 	 */
 	public void delete(String table, String key, Object[] values) throws SQLException {
 
-		if (table == null || key == null || values == null || values.length == 0) {
+		if (table == null || key == null) {
+
+			return;
+
+		}
+
+		if (values == null) {
+
+			values = new Object[] { null };
+
+		}
+
+		if (values.length == 0) {
 
 			return;
 
@@ -624,9 +658,13 @@ public class Database {
 		StringBuilder sql = new StringBuilder();
 
 		sql.append("DELETE FROM ");
+
 		sql.append(table);
+
 		sql.append(" WHERE ");
+
 		sql.append(key);
+
 		sql.append(" IN (?");
 
 		for (int i = 1; i < values.length; i++) {
@@ -1800,13 +1838,19 @@ public class Database {
 
 		}
 
+		if (whereValues == null) {
+
+			whereValues = new Object[] { null };
+
+		}
+
 		StringBuilder sql = new StringBuilder();
 
 		sql.append("SELECT * FROM ");
 
 		sql.append(table);
 
-		if (whereKey != null && whereValues != null && whereValues.length > 0) {
+		if (whereKey != null && whereValues.length > 0) {
 
 			sql.append(" WHERE ");
 
@@ -1854,7 +1898,7 @@ public class Database {
 
 			int idx = 1;
 
-			if (whereKey != null && whereValues != null && whereValues.length > 0) {
+			if (whereKey != null && whereValues.length > 0) {
 
 				ps.setObject(idx++, whereValues[0]);
 
@@ -2087,7 +2131,9 @@ public class Database {
 
 		}
 
-		sql += "(" + primaryKey + ") AS _" + primaryKey + "  FROM " + table + " GROUP BY " + groupKey + " ORDER BY _" + primaryKey;
+		sql += "(" + primaryKey + ") AS _" + primaryKey + "  FROM " + table;
+
+		sql += " GROUP BY " + groupKey + " ORDER BY _" + primaryKey;
 
 		if (max) {
 
@@ -2316,6 +2362,12 @@ public class Database {
 		if (table.length() == 0) {
 
 			return;
+
+		}
+
+		if (whereValues == null) {
+
+			whereValues = new Object[] { null };
 
 		}
 
