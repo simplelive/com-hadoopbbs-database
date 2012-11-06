@@ -79,7 +79,23 @@ public class Database {
 
 	public static void main(String[] args) {
 
-		System.out.println(SIZE);
+		// System.out.println(SIZE);
+
+		System.out.println("Start...");
+
+		Database db = new Database();
+
+		try {
+
+			ArrayList list = db.top("zcarticle", "id", "type", 5);
+
+			System.out.println(list);
+
+		} catch (SQLException ex) {
+
+			ex.printStackTrace();
+
+		}
 
 	}
 
@@ -1424,13 +1440,6 @@ public class Database {
 
 	}
 
-	/**
-	 * 执行SQL查询语句
-	 * 
-	 * @param sql
-	 * @return
-	 * @throws SQLException
-	 */
 	public ArrayList select(String sql) throws SQLException {
 
 		return select(sql, 0);
@@ -1714,12 +1723,6 @@ public class Database {
 
 	public ArrayList select(String table, String whereKey, Object whereValue, String orderKey, boolean orderDesc, int maxRows) throws SQLException {
 
-		if (table == null) {
-
-			return null;
-
-		}
-
 		HashMap where = null;
 
 		if (whereKey != null) {
@@ -1919,6 +1922,203 @@ public class Database {
 		}
 
 		return select(sql.toString(), maxRows);
+
+	}
+
+	public Object[] selectArray(String sql) throws SQLException {
+
+		return selectArray(sql, null, 0);
+
+	}
+
+	public Object[] selectArray(String sql, String arrayKey) throws SQLException {
+
+		return selectArray(sql, arrayKey, 0);
+
+	}
+
+	/**
+	 * 获取指定查询结果数组
+	 * 
+	 * @param sql
+	 * @param arrayKey
+	 * @param maxRows
+	 * @return
+	 * @throws SQLException
+	 */
+	public Object[] selectArray(String sql, String arrayKey, int maxRows) throws SQLException {
+
+		if (sql == null) {
+
+			return new Object[0];
+
+		}
+
+		sql = sql.trim();
+
+		if (sql.length() == 0) {
+
+			return new Object[0];
+
+		}
+
+		if (arrayKey != null) {
+
+			arrayKey = arrayKey.trim();
+
+			if (arrayKey.length() == 0) {
+
+				arrayKey = null;
+
+			}
+
+		}
+
+		Connection conn = null;
+
+		PreparedStatement ps = null;
+
+		ResultSet rs = null;
+
+		ArrayList list = new ArrayList();
+
+		Object o = null;
+
+		try {
+
+			conn = getConnection();
+
+			ps = conn.prepareStatement(sql);
+
+			if (maxRows > 0) {
+
+				ps.setMaxRows(maxRows);
+
+			}
+
+			rs = ps.executeQuery();
+
+			if (arrayKey == null) {
+
+				while (rs.next()) {
+
+					o = rs.getObject(1);
+
+					list.add(o);
+
+				}
+
+			} else {
+
+				while (rs.next()) {
+
+					o = rs.getObject(arrayKey);
+
+					list.add(o);
+
+				}
+
+			}
+
+		} catch (SQLException ex) {
+
+			throw ex;
+
+		} finally {
+
+			close(rs, ps, conn);
+
+		}
+
+		return list.toArray();
+
+	}
+
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey) throws SQLException {
+
+		if (max) {
+
+			return top(table, primaryKey, max, groupKey, true, 0);
+
+		}
+
+		return top(table, primaryKey, max, groupKey, false, 0);
+
+	}
+
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, boolean orderDesc) throws SQLException {
+
+		return top(table, primaryKey, max, groupKey, orderDesc, 0);
+
+	}
+
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, boolean orderDesc, int maxRows) throws SQLException {
+
+		if (table == null || primaryKey == null || groupKey == null) {
+
+			return new ArrayList();
+
+		}
+
+		table = table.trim();
+
+		primaryKey = primaryKey.trim();
+
+		groupKey = groupKey.trim();
+
+		if (table.length() == 0 || primaryKey.length() == 0 || groupKey.length() == 0) {
+
+			return new ArrayList();
+
+		}
+
+		String sql = "SELECT";
+
+		if (max) {
+
+			sql += " MAX";
+
+		} else {
+
+			sql += " MIN";
+
+		}
+
+		sql += "(" + primaryKey + ") AS _" + primaryKey + "  FROM " + table + " GROUP BY " + groupKey + " ORDER BY _" + primaryKey;
+
+		if (max) {
+
+			sql += " DESC";
+
+		}
+
+		Object[] pk = selectArray(sql, null, maxRows);
+
+		return select(table, primaryKey, pk, primaryKey, orderDesc, maxRows);
+
+	}
+
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, int maxRows) throws SQLException {
+
+		if (max) {
+
+			return top(table, primaryKey, max, groupKey, true, maxRows);
+
+		}
+
+		return top(table, primaryKey, max, groupKey, false, maxRows);
+
+	}
+
+	public ArrayList top(String table, String primaryKey, String groupKey) throws SQLException {
+
+		return top(table, primaryKey, true, groupKey, true, 0);
+
+	}
+
+	public ArrayList top(String table, String primaryKey, String groupKey, int maxRows) throws SQLException {
+
+		return top(table, primaryKey, true, groupKey, true, maxRows);
 
 	}
 
