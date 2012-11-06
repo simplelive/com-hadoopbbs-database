@@ -40,8 +40,8 @@ public class Database {
 
 		try {
 
+			// 读取配置属性
 			prop.load(Database.class.getResourceAsStream("Database.properties"));
-			// // 读取配置属性
 
 		} catch (IOException ex) {
 
@@ -107,27 +107,7 @@ public class Database {
 	 */
 	public void close(Connection conn) {
 
-		if (conn == null) {
-
-			return;
-
-		}
-
-		if (POOL.size() > SIZE) {
-
-			try {
-
-				conn.close();
-
-			} catch (SQLException ex) {
-
-			}
-
-		} else {
-
-			POOL.add(conn);
-
-		}
+		close(null, null, conn);
 
 	}
 
@@ -139,7 +119,7 @@ public class Database {
 	 */
 	public void close(PreparedStatement ps) {
 
-		close(ps, null);
+		close(null, ps, null);
 
 	}
 
@@ -166,12 +146,6 @@ public class Database {
 	 *          PreparedStatement
 	 */
 	public void close(ResultSet rs, PreparedStatement ps) {
-
-		if (rs == null && ps == null) {
-
-			return;
-
-		}
 
 		close(rs, ps, null);
 
@@ -219,7 +193,21 @@ public class Database {
 
 		if (conn != null) {
 
-			close(conn);
+			if (POOL.size() > SIZE) {
+
+				try {
+
+					conn.close();
+
+				} catch (SQLException ex) {
+
+				}
+
+			} else {
+
+				POOL.add(conn);
+
+			}
 
 		}
 
@@ -278,44 +266,61 @@ public class Database {
 
 	public int count(String table, HashMap where) throws SQLException {
 
-		if (table == null || where == null || where.isEmpty()) {
-
-			return 0;
-
-		}
-
 		return count(table, where, true);
 
 	}
 
 	public int count(String table, HashMap where, boolean and) throws SQLException {
 
-		if (table == null || where == null || where.isEmpty()) {
+		if (table == null) {
+
+			return 0;
+
+		}
+
+		table = table.trim();
+
+		if (table.length() == 0) {
 
 			return 0;
 
 		}
 
 		StringBuilder sql = new StringBuilder();
+
 		sql.append("SELECT COUNT(*) FROM ");
+
 		sql.append(table);
-		sql.append(" WHERE ");
 
-		Object[] whereKeys = where.keySet().toArray();
+		Object[] whereKeys = null;
 
-		sql.append(whereKeys[0]);
-		sql.append("=?");
+		if (where != null && where.size() > 0) {
 
-		for (int i = 1; i < whereKeys.length; i++) {
+			whereKeys = where.keySet().toArray();
 
-			if (and) {
-				sql.append(" AND ");
-			} else {
-				sql.append(" OR ");
-			}
+			sql.append(" WHERE ");
 
-			sql.append(whereKeys[i]);
+			sql.append(whereKeys[0]);
+
 			sql.append("=?");
+
+			for (int i = 1; i < whereKeys.length; i++) {
+
+				if (and) {
+
+					sql.append(" AND ");
+
+				} else {
+
+					sql.append(" OR ");
+
+				}
+
+				sql.append(whereKeys[i]);
+
+				sql.append("=?");
+
+			}
 
 		}
 
@@ -333,11 +338,15 @@ public class Database {
 
 			int idx = 1;
 
-			ps.setObject(idx++, where.get(whereKeys[0]));
+			if (whereKeys != null) {
 
-			for (int i = 1; i < whereKeys.length; i++) {
+				ps.setObject(idx++, where.get(whereKeys[0]));
 
-				ps.setObject(idx++, where.get(whereKeys[i]));
+				for (int i = 1; i < whereKeys.length; i++) {
+
+					ps.setObject(idx++, where.get(whereKeys[i]));
+
+				}
 
 			}
 
@@ -363,17 +372,17 @@ public class Database {
 
 	}
 
-	public int count(String table, String key, Object value) throws SQLException {
+	public int count(String table, String whereKey, Object whereValue) throws SQLException {
 
-		if (table == null || key == null) {
+		HashMap where = null;
 
-			return 0;
+		if (whereKey != null) {
+
+			where = new HashMap();
+
+			where.put(whereKey, whereValue);
 
 		}
-
-		HashMap where = new HashMap();
-
-		where.put(key, value);
 
 		return count(table, where);
 
@@ -478,12 +487,6 @@ public class Database {
 	 * @throws SQLException
 	 */
 	public void delete(String table, HashMap where) throws SQLException {
-
-		if (table == null || where == null || where.isEmpty()) {
-
-			return;
-
-		}
 
 		delete(table, where, true);
 
