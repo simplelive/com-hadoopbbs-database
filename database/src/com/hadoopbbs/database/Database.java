@@ -87,7 +87,9 @@ public class Database {
 
 		try {
 
-			ArrayList al = db.top("zcarticle", "id", true, "type", true, 10);
+			ArrayList al = db.top("zcarticle", "id", false, "type", null, "addtime", true, 0);
+
+			System.out.println(al.size());
 
 			System.out.println(al);
 
@@ -2143,7 +2145,19 @@ public class Database {
 
 	}
 
-	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, Object[] groupValues, String orderKey, boolean orderDesc, int maxRows) throws SQLException {
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, Object[] groupValues, int maxRows) throws SQLException {
+
+		if (max) {
+
+			return top(table, primaryKey, max, groupKey, groupValues, true, maxRows);
+
+		}
+
+		return top(table, primaryKey, max, groupKey, groupValues, false, maxRows);
+
+	}
+
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, Object[] groupValues, String topKey, boolean orderDesc, int maxRows) throws SQLException {
 
 		if (table == null || primaryKey == null || groupKey == null) {
 
@@ -2163,7 +2177,7 @@ public class Database {
 
 		}
 
-		String orderKey_ = orderKey == null ? primaryKey : orderKey;
+		String topKey_ = topKey == null ? primaryKey : topKey;
 
 		String sql = "SELECT";
 
@@ -2177,7 +2191,7 @@ public class Database {
 
 		}
 
-		sql += "(" + orderKey_ + ") AS _" + orderKey_ + "  FROM " + table;
+		sql += "(" + topKey_ + ") AS _" + topKey_ + "  FROM " + table;
 
 		if (groupValues != null && groupValues.length > 0) {
 
@@ -2193,7 +2207,7 @@ public class Database {
 
 		}
 
-		sql += " GROUP BY " + groupKey + " ORDER BY _" + orderKey_;
+		sql += " GROUP BY " + groupKey + " ORDER BY _" + topKey_;
 
 		if (max) {
 
@@ -2267,9 +2281,9 @@ public class Database {
 
 		}
 
-		if (orderKey == null) {
+		if (topKey == null) {
 
-			return select(table, primaryKey, pk, orderKey_, orderDesc, maxRows);
+			return select(table, primaryKey, pk, topKey_, orderDesc, maxRows);
 
 		}
 
@@ -2287,7 +2301,7 @@ public class Database {
 
 		sql2 += "(" + primaryKey + ") FROM " + table;
 
-		sql2 += " WHERE " + orderKey + " IN(?";
+		sql2 += " WHERE " + topKey + " IN(?";
 
 		for (int i = 1; i < pk.length; i++) {
 
@@ -2347,19 +2361,7 @@ public class Database {
 
 		}
 
-		return select(table, primaryKey, list2.toArray(), orderKey_, orderDesc, maxRows);
-
-	}
-
-	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, Object[] groupValues, int maxRows) throws SQLException {
-
-		if (max) {
-
-			return top(table, primaryKey, max, groupKey, groupValues, true, maxRows);
-
-		}
-
-		return top(table, primaryKey, max, groupKey, groupValues, false, maxRows);
+		return select(table, primaryKey, list2.toArray(), topKey_, orderDesc, maxRows);
 
 	}
 
