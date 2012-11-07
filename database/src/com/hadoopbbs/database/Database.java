@@ -2089,23 +2089,23 @@ public class Database {
 
 		if (max) {
 
-			return top(table, primaryKey, max, groupKey, null, true, 0);
+			return top(table, primaryKey, max, groupKey, null, null, true, 0);
 
 		}
 
-		return top(table, primaryKey, max, groupKey, null, false, 0);
+		return top(table, primaryKey, max, groupKey, null, null, false, 0);
 
 	}
 
 	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, boolean orderDesc) throws SQLException {
 
-		return top(table, primaryKey, max, groupKey, null, orderDesc, 0);
+		return top(table, primaryKey, max, groupKey, null, null, orderDesc, 0);
 
 	}
 
 	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, boolean orderDesc, int maxRows) throws SQLException {
 
-		return top(table, primaryKey, max, groupKey, null, orderDesc, maxRows);
+		return top(table, primaryKey, max, groupKey, null, null, orderDesc, maxRows);
 
 	}
 
@@ -2113,11 +2113,11 @@ public class Database {
 
 		if (max) {
 
-			return top(table, primaryKey, max, groupKey, null, true, maxRows);
+			return top(table, primaryKey, max, groupKey, null, null, true, maxRows);
 
 		}
 
-		return top(table, primaryKey, max, groupKey, null, false, maxRows);
+		return top(table, primaryKey, max, groupKey, null, null, false, maxRows);
 
 	}
 
@@ -2125,17 +2125,17 @@ public class Database {
 
 		if (max) {
 
-			return top(table, primaryKey, max, groupKey, groupValues, true, 0);
+			return top(table, primaryKey, max, groupKey, groupValues, null, true, 0);
 
 		}
 
-		return top(table, primaryKey, max, groupKey, groupValues, false, 0);
+		return top(table, primaryKey, max, groupKey, groupValues, null, false, 0);
 
 	}
 
 	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, Object[] groupValues, boolean orderDesc) throws SQLException {
 
-		return top(table, primaryKey, max, groupKey, groupValues, orderDesc, 0);
+		return top(table, primaryKey, max, groupKey, groupValues, null, orderDesc, 0);
 
 	}
 
@@ -2149,11 +2149,29 @@ public class Database {
 
 		if (max) {
 
-			return top(table, primaryKey, max, groupKey, groupValues, true, maxRows);
+			return top(table, primaryKey, max, groupKey, groupValues, null, true, maxRows);
 
 		}
 
-		return top(table, primaryKey, max, groupKey, groupValues, false, maxRows);
+		return top(table, primaryKey, max, groupKey, groupValues, null, false, maxRows);
+
+	}
+
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, Object[] groupValues, String topKey) throws SQLException {
+
+		if (max) {
+
+			return top(table, primaryKey, max, groupKey, groupValues, topKey, true, 0);
+
+		}
+
+		return top(table, primaryKey, max, groupKey, groupValues, topKey, false, 0);
+
+	}
+
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, Object[] groupValues, String topKey, boolean orderDesc) throws SQLException {
+
+		return top(table, primaryKey, max, groupKey, groupValues, topKey, orderDesc, 0);
 
 	}
 
@@ -2365,27 +2383,99 @@ public class Database {
 
 	}
 
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, Object[] groupValues, String topKey, int maxRows) throws SQLException {
+
+		if (max) {
+
+			return top(table, primaryKey, max, groupKey, groupValues, topKey, true, maxRows);
+
+		}
+
+		return top(table, primaryKey, max, groupKey, groupValues, topKey, false, maxRows);
+
+	}
+
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, String topKey) throws SQLException {
+
+		if (max) {
+
+			return top(table, primaryKey, max, groupKey, null, topKey, true, 0);
+
+		}
+
+		return top(table, primaryKey, max, groupKey, null, topKey, false, 0);
+
+	}
+
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, String topKey, boolean orderDesc) throws SQLException {
+
+		return top(table, primaryKey, max, groupKey, null, topKey, orderDesc, 0);
+
+	}
+
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, String topKey, boolean orderDesc, int maxRows) throws SQLException {
+
+		return top(table, primaryKey, max, groupKey, null, topKey, orderDesc, maxRows);
+
+	}
+
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, String topKey, int maxRows) throws SQLException {
+
+		if (max) {
+
+			return top(table, primaryKey, max, groupKey, null, topKey, true, maxRows);
+
+		}
+
+		return top(table, primaryKey, max, groupKey, null, topKey, false, maxRows);
+
+	}
+
 	public ArrayList top(String table, String primaryKey, String groupKey) throws SQLException {
 
-		return top(table, primaryKey, true, groupKey, null, true, 0);
+		return top(table, primaryKey, true, groupKey, null, null, true, 0);
 
 	}
 
 	public ArrayList top(String table, String primaryKey, String groupKey, int maxRows) throws SQLException {
 
-		return top(table, primaryKey, true, groupKey, null, true, maxRows);
+		return top(table, primaryKey, true, groupKey, null, null, true, maxRows);
 
 	}
 
 	public ArrayList top(String table, String primaryKey, String groupKey, Object[] groupValues) throws SQLException {
 
-		return top(table, primaryKey, true, groupKey, groupValues, true, 0);
+		return top(table, primaryKey, true, groupKey, groupValues, null, true, 0);
 
 	}
 
 	public ArrayList top(String table, String primaryKey, String groupKey, Object[] groupValues, int maxRows) throws SQLException {
 
-		return top(table, primaryKey, true, groupKey, groupValues, true, maxRows);
+		return top(table, primaryKey, true, groupKey, groupValues, null, true, maxRows);
+
+	}
+
+	public ArrayList top(String table, String primaryKey, String groupKey, Object[] groupValues, String topKey) throws SQLException {
+
+		return top(table, primaryKey, true, groupKey, groupValues, topKey, true, 0);
+
+	}
+
+	public ArrayList top(String table, String primaryKey, String groupKey, Object[] groupValues, String topKey, int maxRows) throws SQLException {
+
+		return top(table, primaryKey, true, groupKey, groupValues, topKey, true, maxRows);
+
+	}
+
+	public ArrayList top(String table, String primaryKey, String groupKey, String topKey) throws SQLException {
+
+		return top(table, primaryKey, true, groupKey, null, topKey, true, 0);
+
+	}
+
+	public ArrayList top(String table, String primaryKey, String groupKey, String topKey, int maxRows) throws SQLException {
+
+		return top(table, primaryKey, true, groupKey, null, topKey, true, maxRows);
 
 	}
 
