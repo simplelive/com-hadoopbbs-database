@@ -87,7 +87,7 @@ public class Database {
 
 		try {
 
-			ArrayList al = db.top("zcarticle", "id", false, "type", null, "addtime", true, 0);
+			ArrayList al = db.top("zcarticle", "id", "type", "addtime", 10);
 
 			System.out.println(al.size());
 
