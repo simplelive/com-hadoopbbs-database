@@ -55,6 +55,8 @@ public class Database {
 
 		} catch (Exception ex) {
 
+			SIZE = 10;
+
 		}
 
 		DRIVER = prop.getProperty("DRIVER").trim();
@@ -171,6 +173,8 @@ public class Database {
 
 				rs.close();
 
+				rs = null;
+
 			} catch (SQLException ex) {
 
 				ex.printStackTrace();
@@ -185,6 +189,8 @@ public class Database {
 
 				ps.close();
 
+				ps = null;
+
 			} catch (SQLException ex) {
 
 				ex.printStackTrace();
@@ -195,19 +201,23 @@ public class Database {
 
 		if (conn != null) {
 
-			if (POOL.size() > SIZE) {
+			if (POOL.size() < SIZE) {
+
+				POOL.add(conn);
+
+			} else {
 
 				try {
 
 					conn.close();
 
+					conn = null;
+
 				} catch (SQLException ex) {
 
+					ex.printStackTrace();
+
 				}
-
-			} else {
-
-				POOL.add(conn);
 
 			}
 
@@ -374,6 +384,10 @@ public class Database {
 
 		} finally {
 
+			sql = null;
+
+			whereKeys = null;
+
 			close(rs, ps, conn);
 
 		}
@@ -489,6 +503,8 @@ public class Database {
 
 		} finally {
 
+			sql = null;
+
 			close(rs, ps, conn);
 
 		}
@@ -543,9 +559,13 @@ public class Database {
 		StringBuilder sql = new StringBuilder();
 
 		sql.append("DELETE FROM ");
+
 		sql.append(table);
+
 		sql.append(" WHERE ");
+
 		sql.append(wk[0]);
+
 		sql.append("=?");
 
 		for (int i = 1; i < wk.length; i++) {
@@ -598,6 +618,10 @@ public class Database {
 			throw ex;
 
 		} finally {
+
+			sql = null;
+
+			wk = null;
 
 			if (conn != null) {
 
@@ -719,6 +743,8 @@ public class Database {
 
 		} finally {
 
+			sql = null;
+
 			if (conn != null) {
 
 				conn.setAutoCommit(true);
@@ -803,15 +829,19 @@ public class Database {
 
 		}
 
-		ArrayList rows = select(table, where);
+		ArrayList rows = select(table, where, 1);
 
-		if (rows.isEmpty()) {
+		HashMap row = null;
 
-			return null;
+		if (rows.size() > 0) {
+
+			row = (HashMap) rows.get(0);
 
 		}
 
-		return (HashMap) rows.get(0);
+		rows = null;
+
+		return row;
 
 	}
 
@@ -832,15 +862,19 @@ public class Database {
 
 		}
 
-		ArrayList rows = select(table, where, and);
+		ArrayList rows = select(table, where, and, 1);
 
-		if (rows.isEmpty()) {
+		HashMap row = null;
 
-			return null;
+		if (rows.size() > 0) {
+
+			row = (HashMap) rows.get(0);
 
 		}
 
-		return (HashMap) rows.get(0);
+		rows = null;
+
+		return row;
 
 	}
 
@@ -861,15 +895,19 @@ public class Database {
 
 		}
 
-		ArrayList rows = select(table, key, value);
+		ArrayList rows = select(table, key, value, 1);
 
-		if (rows.isEmpty()) {
+		HashMap row = null;
 
-			return null;
+		if (rows.size() > 0) {
+
+			row = (HashMap) rows.get(0);
 
 		}
 
-		return (HashMap) rows.get(0);
+		rows = null;
+
+		return row;
 
 	}
 
@@ -883,7 +921,7 @@ public class Database {
 
 		Connection conn = null;
 
-		if (!POOL.isEmpty()) {
+		if (POOL.size() > 1) {
 
 			conn = (Connection) POOL.remove(0);
 
@@ -924,17 +962,17 @@ public class Database {
 
 		Connection conn = null;
 
+		StringBuilder sql = null;
+
+		Object[] cols = null;
+
+		HashMap row = null;
+
 		try {
 
 			conn = getConnection();
 
 			conn.setAutoCommit(false);
-
-			HashMap row = null;
-
-			Object[] cols = null;
-
-			StringBuilder sql = null;
 
 			PreparedStatement ps = null;
 
@@ -1006,6 +1044,12 @@ public class Database {
 
 		} finally {
 
+			row = null;
+
+			cols = null;
+
+			sql = null;
+
 			if (conn != null) {
 
 				conn.setAutoCommit(true);
@@ -1013,8 +1057,6 @@ public class Database {
 			}
 
 			close(conn);
-
-			rows.clear();
 
 		}
 
@@ -1040,6 +1082,8 @@ public class Database {
 		rows.add(row);
 
 		insert(table, rows);
+
+		rows = null;
 
 	}
 
@@ -1099,6 +1143,8 @@ public class Database {
 
 		} finally {
 
+			sql = null;
+
 			close(rs, ps, conn);
 
 		}
@@ -1146,6 +1192,14 @@ public class Database {
 
 		}
 
+		ArrayList rows = new ArrayList();
+
+		String cn[] = null;
+
+		String CN[] = null;
+
+		ResultSetMetaData meta = null;
+
 		try {
 
 			rs.last();
@@ -1192,15 +1246,13 @@ public class Database {
 
 			}
 
-			ArrayList rows = new ArrayList();
-
-			ResultSetMetaData meta = rs.getMetaData();
+			meta = rs.getMetaData();
 
 			int cc = meta.getColumnCount();
 
-			String cn[] = new String[cc];
+			cn = new String[cc];
 
-			String CN[] = new String[cc];
+			CN = new String[cc];
 
 			for (int i = 0; i < cc; i++) {
 
@@ -1244,7 +1296,17 @@ public class Database {
 
 		} catch (SQLException ex) {
 
+			rows = null;
+
 			throw ex;
+
+		} finally {
+
+			cn = null;
+
+			CN = null;
+
+			meta = null;
 
 		}
 
@@ -1344,6 +1406,8 @@ public class Database {
 
 		} catch (SQLException ex) {
 
+			result = null;
+
 			throw ex;
 
 		} finally {
@@ -1413,6 +1477,8 @@ public class Database {
 
 		int cp = c / pageSize + (c % pageSize > 0 ? 1 : 0);
 
+		sql = null;
+
 		return cp;
 
 	}
@@ -1435,15 +1501,21 @@ public class Database {
 
 		}
 
+		String cn[] = null;
+
+		String CN[] = null;
+
+		ResultSetMetaData meta = null;
+
 		try {
 
-			ResultSetMetaData meta = rs.getMetaData();
+			meta = rs.getMetaData();
 
 			int cc = meta.getColumnCount();
 
-			String cn[] = new String[cc];
+			cn = new String[cc];
 
-			String CN[] = new String[cc];
+			CN = new String[cc];
 
 			for (int i = 0; i < cc; i++) {
 
@@ -1475,9 +1547,17 @@ public class Database {
 
 		} catch (SQLException ex) {
 
-			rows.clear();
+			rows = null;
 
 			throw ex;
+
+		} finally {
+
+			cn = null;
+
+			CN = null;
+
+			meta = null;
 
 		}
 
@@ -1572,6 +1652,7 @@ public class Database {
 			whereKeys = where.keySet().toArray();
 
 			sql.append(whereKeys[0]);
+
 			sql.append("=?");
 
 			for (int i = 1; i < whereKeys.length; i++) {
@@ -1641,9 +1722,15 @@ public class Database {
 
 		} catch (SQLException ex) {
 
+			rows = null;
+
 			throw ex;
 
 		} finally {
+
+			sql = null;
+
+			whereKeys = null;
 
 			close(rs, ps, conn);
 
@@ -1729,6 +1816,8 @@ public class Database {
 			rows = select(rs);
 
 		} catch (SQLException ex) {
+
+			rows = null;
 
 			throw ex;
 
@@ -1872,7 +1961,25 @@ public class Database {
 
 		}
 
-		if (orderKey != null) {
+		if (orderKey == null) {
+
+			if (whereKey != null && whereValues.length > 0) {
+
+				sql.append(" ORDER BY  FIELD(");
+
+				sql.append(whereKey);
+
+				for (int i = 0; i < whereValues.length; i++) {
+
+					sql.append(",?");
+
+				}
+
+				sql.append(")");
+
+			}
+
+		} else {
 
 			sql.append(" ORDER BY ");
 
@@ -1904,11 +2011,19 @@ public class Database {
 
 			if (whereKey != null && whereValues.length > 0) {
 
-				ps.setObject(idx++, whereValues[0]);
-
-				for (int i = 1; i < whereValues.length; i++) {
+				for (int i = 0; i < whereValues.length; i++) {
 
 					ps.setObject(idx++, whereValues[i]);
+
+				}
+
+				if (orderKey == null) {
+
+					for (int i = 0; i < whereValues.length; i++) {
+
+						ps.setObject(idx++, whereValues[i]);
+
+					}
 
 				}
 
@@ -1926,9 +2041,13 @@ public class Database {
 
 		} catch (SQLException ex) {
 
+			rows = null;
+
 			throw ex;
 
 		} finally {
+
+			sql = null;
 
 			close(rs, ps, conn);
 
@@ -2072,6 +2191,8 @@ public class Database {
 			}
 
 		} catch (SQLException ex) {
+
+			list = null;
 
 			throw ex;
 
@@ -2283,15 +2404,21 @@ public class Database {
 
 		} catch (SQLException ex) {
 
+			list = null;
+
 			throw ex;
 
 		} finally {
+
+			sql = null;
 
 			close(rs, ps, conn);
 
 		}
 
 		Object[] pk = list.toArray();
+
+		list = null;
 
 		if (pk.length == 0) {
 
@@ -2371,9 +2498,15 @@ public class Database {
 
 		} catch (SQLException ex) {
 
+			list2 = null;
+
 			throw ex;
 
 		} finally {
+
+			sql2 = null;
+
+			pk = null;
 
 			close(rs2, ps2, conn2);
 
@@ -2620,6 +2753,12 @@ public class Database {
 
 		} finally {
 
+			sql = null;
+
+			wk = null;
+
+			sk = null;
+
 			if (conn != null) {
 
 				conn.setAutoCommit(true);
@@ -2645,6 +2784,8 @@ public class Database {
 		}
 
 		update(table, set, whereKey, whereValues);
+
+		whereValues = null;
 
 	}
 
@@ -2769,6 +2910,10 @@ public class Database {
 
 		} finally {
 
+			sql = null;
+
+			sk = null;
+
 			if (conn != null) {
 
 				conn.setAutoCommit(true);
@@ -2817,6 +2962,8 @@ public class Database {
 
 		update(table, set, where, and);
 
+		set = null;
+
 	}
 
 	/**
@@ -2843,6 +2990,8 @@ public class Database {
 		}
 
 		update(table, setKey, setValue, where, true);
+
+		where = null;
 
 	}
 
@@ -2879,6 +3028,8 @@ public class Database {
 		set.put(setKey, setValue);
 
 		update(table, set, whereKey, whereValues);
+
+		set = null;
 
 	}
 
