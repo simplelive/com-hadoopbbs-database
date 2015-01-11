@@ -24,7 +24,7 @@ public class Database {
 
 	public static Vector POOL = new Vector(); // 连接池
 
-	public static int SIZE = 10; // 连接池最多保存的连接数
+	public static int SIZE = 3; // 连接池最多保存的连接数
 
 	public static String DRIVER; // 驱动类
 
