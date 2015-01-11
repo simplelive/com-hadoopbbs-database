@@ -921,7 +921,7 @@ public class Database {
 
 		Connection conn = null;
 
-		if (POOL.size() > 1) {
+		if (POOL.size() > 0) {
 
 			conn = (Connection) POOL.remove(0);
 
