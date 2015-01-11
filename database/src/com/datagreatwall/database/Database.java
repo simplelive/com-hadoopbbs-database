@@ -107,7 +107,7 @@ public class Database {
 	 * 连接返回连接池或关闭
 	 * 
 	 * @param conn
-	 *            Connection
+	 *          Connection
 	 */
 	public void close(Connection conn) {
 
@@ -119,7 +119,7 @@ public class Database {
 	 * 关闭PreparedStatement
 	 * 
 	 * @param ps
-	 *            PreparedStatement
+	 *          PreparedStatement
 	 */
 	public void close(PreparedStatement ps) {
 
@@ -131,9 +131,9 @@ public class Database {
 	 * 关闭PreparedStatement和Connection
 	 * 
 	 * @param ps
-	 *            PreparedStatement
+	 *          PreparedStatement
 	 * @param conn
-	 *            Connection
+	 *          Connection
 	 */
 	public void close(PreparedStatement ps, Connection conn) {
 
@@ -145,9 +145,9 @@ public class Database {
 	 * 关闭PreparedStatement和ResultSet
 	 * 
 	 * @param rs
-	 *            ResultSet
+	 *          ResultSet
 	 * @param ps
-	 *            PreparedStatement
+	 *          PreparedStatement
 	 */
 	public void close(ResultSet rs, PreparedStatement ps) {
 
@@ -159,11 +159,11 @@ public class Database {
 	 * 关闭PreparedStatement、ResultSet和Connection
 	 * 
 	 * @param rs
-	 *            ResultSet
+	 *          ResultSet
 	 * @param ps
-	 *            PreparedStatement
+	 *          PreparedStatement
 	 * @param conn
-	 *            Connection
+	 *          Connection
 	 */
 	public void close(ResultSet rs, PreparedStatement ps, Connection conn) {
 
@@ -290,8 +290,7 @@ public class Database {
 
 	}
 
-	public int count(String table, HashMap where, boolean and)
-			throws SQLException {
+	public int count(String table, HashMap where, boolean and) throws SQLException {
 
 		if (table == null) {
 
@@ -397,8 +396,7 @@ public class Database {
 
 	}
 
-	public int count(String table, String whereKey, Object whereValue)
-			throws SQLException {
+	public int count(String table, String whereKey, Object whereValue) throws SQLException {
 
 		return count(table, whereKey, new Object[] { whereValue });
 
@@ -413,8 +411,7 @@ public class Database {
 	 * @return
 	 * @throws SQLException
 	 */
-	public int count(String table, String key, Object[] values)
-			throws SQLException {
+	public int count(String table, String key, Object[] values) throws SQLException {
 
 		if (table == null) {
 
@@ -549,8 +546,7 @@ public class Database {
 	 * @param and
 	 * @throws SQLException
 	 */
-	public void delete(String table, HashMap where, boolean and)
-			throws SQLException {
+	public void delete(String table, HashMap where, boolean and) throws SQLException {
 
 		if (table == null || where == null || where.isEmpty()) {
 
@@ -647,8 +643,7 @@ public class Database {
 	 * @param value
 	 * @throws SQLException
 	 */
-	public void delete(String table, String key, Object value)
-			throws SQLException {
+	public void delete(String table, String key, Object value) throws SQLException {
 
 		if (table == null || key == null) {
 
@@ -668,8 +663,7 @@ public class Database {
 	 * @param values
 	 * @throws SQLException
 	 */
-	public void delete(String table, String key, Object[] values)
-			throws SQLException {
+	public void delete(String table, String key, Object[] values) throws SQLException {
 
 		if (table == null || key == null) {
 
@@ -860,8 +854,7 @@ public class Database {
 	 * @return
 	 * @throws SQLException
 	 */
-	public HashMap get(String table, HashMap where, boolean and)
-			throws SQLException {
+	public HashMap get(String table, HashMap where, boolean and) throws SQLException {
 
 		if (table == null || where == null || where.isEmpty()) {
 
@@ -894,8 +887,7 @@ public class Database {
 	 * @return
 	 * @throws SQLException
 	 */
-	public HashMap get(String table, String key, Object value)
-			throws SQLException {
+	public HashMap get(String table, String key, Object value) throws SQLException {
 
 		if (table == null || key == null) {
 
@@ -1099,9 +1091,9 @@ public class Database {
 	 * 获取指定列的最大值
 	 * 
 	 * @param table
-	 *            表名
+	 *          表名
 	 * @param key
-	 *            列名
+	 *          列名
 	 * @return
 	 * @throws SQLException
 	 */
@@ -1168,6 +1160,28 @@ public class Database {
 	 * @param pageSize
 	 * @return
 	 * @throws SQLException
+	 * 
+	 *           HashMap PAGE = xxx.page(star, n);
+	 * 
+	 *           ArrayList RS = null;
+	 * 
+	 *           int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
+	 * 
+	 *           if (PAGE != null) {
+	 * 
+	 *           RS = (ArrayList)PAGE.get("RS");
+	 * 
+	 *           PC = (Integer)PAGE.get("PC");
+	 * 
+	 *           PN = (Integer)PAGE.get("PN");
+	 * 
+	 *           RC = (Integer)PAGE.get("RC");
+	 * 
+	 *           RN = (Integer)PAGE.get("RN");
+	 * 
+	 *           SIZE = RS.size();
+	 * 
+	 *           }
 	 */
 	public HashMap page(ResultSet rs, int pageSize) throws SQLException {
 
@@ -1189,9 +1203,30 @@ public class Database {
 	 * @param pageNo
 	 * @return
 	 * @throws SQLException
+	 * 
+	 *           HashMap PAGE = xxx.page(star, n);
+	 * 
+	 *           ArrayList RS = null;
+	 * 
+	 *           int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
+	 * 
+	 *           if (PAGE != null) {
+	 * 
+	 *           RS = (ArrayList)PAGE.get("RS");
+	 * 
+	 *           PC = (Integer)PAGE.get("PC");
+	 * 
+	 *           PN = (Integer)PAGE.get("PN");
+	 * 
+	 *           RC = (Integer)PAGE.get("RC");
+	 * 
+	 *           RN = (Integer)PAGE.get("RN");
+	 * 
+	 *           SIZE = RS.size();
+	 * 
+	 *           }
 	 */
-	public HashMap page(ResultSet rs, int pageSize, int pageNo)
-			throws SQLException {
+	public HashMap page(ResultSet rs, int pageSize, int pageNo) throws SQLException {
 
 		HashMap result = null;
 
@@ -1331,9 +1366,30 @@ public class Database {
 	 * @param pageNo
 	 * @return
 	 * @throws SQLException
+	 * 
+	 *           HashMap PAGE = xxx.page(star, n);
+	 * 
+	 *           ArrayList RS = null;
+	 * 
+	 *           int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
+	 * 
+	 *           if (PAGE != null) {
+	 * 
+	 *           RS = (ArrayList)PAGE.get("RS");
+	 * 
+	 *           PC = (Integer)PAGE.get("PC");
+	 * 
+	 *           PN = (Integer)PAGE.get("PN");
+	 * 
+	 *           RC = (Integer)PAGE.get("RC");
+	 * 
+	 *           RN = (Integer)PAGE.get("RN");
+	 * 
+	 *           SIZE = RS.size();
+	 * 
+	 *           }
 	 */
-	public HashMap page(ResultSet rs, int pageSize, String pageNo)
-			throws SQLException {
+	public HashMap page(ResultSet rs, int pageSize, String pageNo) throws SQLException {
 
 		if (rs == null || pageSize < 1) {
 
@@ -1366,6 +1422,28 @@ public class Database {
 	 * @param pageSize
 	 * @return
 	 * @throws SQLException
+	 * 
+	 *           HashMap PAGE = xxx.page(star, n);
+	 * 
+	 *           ArrayList RS = null;
+	 * 
+	 *           int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
+	 * 
+	 *           if (PAGE != null) {
+	 * 
+	 *           RS = (ArrayList)PAGE.get("RS");
+	 * 
+	 *           PC = (Integer)PAGE.get("PC");
+	 * 
+	 *           PN = (Integer)PAGE.get("PN");
+	 * 
+	 *           RC = (Integer)PAGE.get("RC");
+	 * 
+	 *           RN = (Integer)PAGE.get("RN");
+	 * 
+	 *           SIZE = RS.size();
+	 * 
+	 *           }
 	 */
 	public HashMap page(String sql, int pageSize) throws SQLException {
 
@@ -1387,9 +1465,30 @@ public class Database {
 	 * @param pageNo
 	 * @return
 	 * @throws SQLException
+	 * 
+	 *           HashMap PAGE = xxx.page(star, n);
+	 * 
+	 *           ArrayList RS = null;
+	 * 
+	 *           int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
+	 * 
+	 *           if (PAGE != null) {
+	 * 
+	 *           RS = (ArrayList)PAGE.get("RS");
+	 * 
+	 *           PC = (Integer)PAGE.get("PC");
+	 * 
+	 *           PN = (Integer)PAGE.get("PN");
+	 * 
+	 *           RC = (Integer)PAGE.get("RC");
+	 * 
+	 *           RN = (Integer)PAGE.get("RN");
+	 * 
+	 *           SIZE = RS.size();
+	 * 
+	 *           }
 	 */
-	public HashMap page(String sql, int pageSize, int pageNo)
-			throws SQLException {
+	public HashMap page(String sql, int pageSize, int pageNo) throws SQLException {
 
 		if (sql == null || pageSize < 1 || pageNo < 1) {
 
@@ -1439,9 +1538,30 @@ public class Database {
 	 * @param pageNo
 	 * @return
 	 * @throws SQLException
+	 * 
+	 *           HashMap PAGE = xxx.page(star, n);
+	 * 
+	 *           ArrayList RS = null;
+	 * 
+	 *           int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
+	 * 
+	 *           if (PAGE != null) {
+	 * 
+	 *           RS = (ArrayList)PAGE.get("RS");
+	 * 
+	 *           PC = (Integer)PAGE.get("PC");
+	 * 
+	 *           PN = (Integer)PAGE.get("PN");
+	 * 
+	 *           RC = (Integer)PAGE.get("RC");
+	 * 
+	 *           RN = (Integer)PAGE.get("RN");
+	 * 
+	 *           SIZE = RS.size();
+	 * 
+	 *           }
 	 */
-	public HashMap page(String sql, int pageSize, String pageNo)
-			throws SQLException {
+	public HashMap page(String sql, int pageSize, String pageNo) throws SQLException {
 
 		if (sql == null || pageSize < 1) {
 
@@ -1499,7 +1619,7 @@ public class Database {
 	 * 获取ResultSet的记录集
 	 * 
 	 * @param rs
-	 *            ResultSet
+	 *          ResultSet
 	 * @return ArrayList 大小为0表示没有记录，每条记录使用HashMap封装，键名为大写的字段名，键值为字段值
 	 * @throws SQLException
 	 */
@@ -1589,29 +1709,25 @@ public class Database {
 
 	}
 
-	public ArrayList select(String table, HashMap where, boolean and)
-			throws SQLException {
+	public ArrayList select(String table, HashMap where, boolean and) throws SQLException {
 
 		return select(table, where, and, null, false, 0);
 
 	}
 
-	public ArrayList select(String table, HashMap where, boolean and,
-			int maxRows) throws SQLException {
+	public ArrayList select(String table, HashMap where, boolean and, int maxRows) throws SQLException {
 
 		return select(table, where, and, null, false, maxRows);
 
 	}
 
-	public ArrayList select(String table, HashMap where, boolean and,
-			String orderKey) throws SQLException {
+	public ArrayList select(String table, HashMap where, boolean and, String orderKey) throws SQLException {
 
 		return select(table, where, and, orderKey, false, 0);
 
 	}
 
-	public ArrayList select(String table, HashMap where, boolean and,
-			String orderKey, boolean orderDesc) throws SQLException {
+	public ArrayList select(String table, HashMap where, boolean and, String orderKey, boolean orderDesc) throws SQLException {
 
 		return select(table, where, and, orderKey, orderDesc, 0);
 
@@ -1621,23 +1737,21 @@ public class Database {
 	 * 按表名、字段名及字段值条件、条件是否为AND、排序字段名、排序是否为倒序、最大返回记录数等进行查询
 	 * 
 	 * @param table
-	 *            表名
+	 *          表名
 	 * @param where
-	 *            字段名及字段值条件
+	 *          字段名及字段值条件
 	 * @param and
-	 *            条件是否为AND
+	 *          条件是否为AND
 	 * @param orderKey
-	 *            排序字段名
+	 *          排序字段名
 	 * @param desc
-	 *            排序是否为倒序
+	 *          排序是否为倒序
 	 * @param maxRows
-	 *            最大返回记录数
+	 *          最大返回记录数
 	 * @return
 	 * @throws SQLException
 	 */
-	public ArrayList select(String table, HashMap where, boolean and,
-			String orderKey, boolean orderDesc, int maxRows)
-			throws SQLException {
+	public ArrayList select(String table, HashMap where, boolean and, String orderKey, boolean orderDesc, int maxRows) throws SQLException {
 
 		ArrayList rows = new ArrayList();
 
@@ -1758,43 +1872,37 @@ public class Database {
 
 	}
 
-	public ArrayList select(String table, HashMap where, boolean and,
-			String orderKey, int maxRows) throws SQLException {
+	public ArrayList select(String table, HashMap where, boolean and, String orderKey, int maxRows) throws SQLException {
 
 		return select(table, where, and, orderKey, false, maxRows);
 
 	}
 
-	public ArrayList select(String table, HashMap where, int maxRows)
-			throws SQLException {
+	public ArrayList select(String table, HashMap where, int maxRows) throws SQLException {
 
 		return select(table, where, true, null, false, maxRows);
 
 	}
 
-	public ArrayList select(String table, HashMap where, String orderKey)
-			throws SQLException {
+	public ArrayList select(String table, HashMap where, String orderKey) throws SQLException {
 
 		return select(table, where, true, orderKey, false, 0);
 
 	}
 
-	public ArrayList select(String table, HashMap where, String orderKey,
-			boolean orderDesc) throws SQLException {
+	public ArrayList select(String table, HashMap where, String orderKey, boolean orderDesc) throws SQLException {
 
 		return select(table, where, orderKey, orderDesc);
 
 	}
 
-	public ArrayList select(String table, HashMap where, String orderKey,
-			boolean orderDesc, int maxRows) throws SQLException {
+	public ArrayList select(String table, HashMap where, String orderKey, boolean orderDesc, int maxRows) throws SQLException {
 
 		return select(table, where, true, orderKey, orderDesc, maxRows);
 
 	}
 
-	public ArrayList select(String table, HashMap where, String orderKey,
-			int maxRows) throws SQLException {
+	public ArrayList select(String table, HashMap where, String orderKey, int maxRows) throws SQLException {
 
 		return select(table, where, true, orderKey, false, maxRows);
 
@@ -1855,37 +1963,31 @@ public class Database {
 
 	}
 
-	public ArrayList select(String table, String whereKey, Object whereValue)
-			throws SQLException {
+	public ArrayList select(String table, String whereKey, Object whereValue) throws SQLException {
 
 		return select(table, whereKey, whereValue, null, false, 0);
 
 	}
 
-	public ArrayList select(String table, String whereKey, Object whereValue,
-			int maxRows) throws SQLException {
+	public ArrayList select(String table, String whereKey, Object whereValue, int maxRows) throws SQLException {
 
 		return select(table, whereKey, whereValue, null, false, maxRows);
 
 	}
 
-	public ArrayList select(String table, String whereKey, Object whereValue,
-			String orderKey) throws SQLException {
+	public ArrayList select(String table, String whereKey, Object whereValue, String orderKey) throws SQLException {
 
 		return select(table, whereKey, whereValue, orderKey, false, 0);
 
 	}
 
-	public ArrayList select(String table, String whereKey, Object whereValue,
-			String orderKey, boolean orderDesc) throws SQLException {
+	public ArrayList select(String table, String whereKey, Object whereValue, String orderKey, boolean orderDesc) throws SQLException {
 
 		return select(table, whereKey, whereValue, orderKey, orderDesc, 0);
 
 	}
 
-	public ArrayList select(String table, String whereKey, Object whereValue,
-			String orderKey, boolean orderDesc, int maxRows)
-			throws SQLException {
+	public ArrayList select(String table, String whereKey, Object whereValue, String orderKey, boolean orderDesc, int maxRows) throws SQLException {
 
 		HashMap where = null;
 
@@ -1901,36 +2003,31 @@ public class Database {
 
 	}
 
-	public ArrayList select(String table, String whereKey, Object whereValue,
-			String orderKey, int maxRows) throws SQLException {
+	public ArrayList select(String table, String whereKey, Object whereValue, String orderKey, int maxRows) throws SQLException {
 
 		return select(table, whereKey, whereValue, orderKey, false, maxRows);
 
 	}
 
-	public ArrayList select(String table, String whereKey, Object[] whereValues)
-			throws SQLException {
+	public ArrayList select(String table, String whereKey, Object[] whereValues) throws SQLException {
 
 		return select(table, whereKey, whereValues, null, false, 0);
 
 	}
 
-	public ArrayList select(String table, String whereKey,
-			Object[] whereValues, int maxRows) throws SQLException {
+	public ArrayList select(String table, String whereKey, Object[] whereValues, int maxRows) throws SQLException {
 
 		return select(table, whereKey, whereValues, null, false, maxRows);
 
 	}
 
-	public ArrayList select(String table, String whereKey,
-			Object[] whereValues, String orderKey) throws SQLException {
+	public ArrayList select(String table, String whereKey, Object[] whereValues, String orderKey) throws SQLException {
 
 		return select(table, whereKey, whereValues, orderKey, false, 0);
 
 	}
 
-	public ArrayList select(String table, String key, Object[] values,
-			String orderKey, boolean orderDesc) throws SQLException {
+	public ArrayList select(String table, String key, Object[] values, String orderKey, boolean orderDesc) throws SQLException {
 
 		return select(table, key, values, orderKey, orderDesc, 0);
 
@@ -1948,9 +2045,7 @@ public class Database {
 	 * @return
 	 * @throws SQLException
 	 */
-	public ArrayList select(String table, String whereKey,
-			Object[] whereValues, String orderKey, boolean orderDesc,
-			int maxRows) throws SQLException {
+	public ArrayList select(String table, String whereKey, Object[] whereValues, String orderKey, boolean orderDesc, int maxRows) throws SQLException {
 
 		ArrayList rows = new ArrayList();
 
@@ -2094,9 +2189,7 @@ public class Database {
 
 	}
 
-	public ArrayList select(String table, String whereKey,
-			Object[] whereValues, String orderKey, int maxRows)
-			throws SQLException {
+	public ArrayList select(String table, String whereKey, Object[] whereValues, String orderKey, int maxRows) throws SQLException {
 
 		return select(table, whereKey, whereValues, orderKey, false, maxRows);
 
@@ -2140,8 +2233,7 @@ public class Database {
 
 	}
 
-	public Object[] selectArray(String sql, String arrayKey)
-			throws SQLException {
+	public Object[] selectArray(String sql, String arrayKey) throws SQLException {
 
 		return selectArray(sql, arrayKey, 0);
 
@@ -2156,8 +2248,7 @@ public class Database {
 	 * @return
 	 * @throws SQLException
 	 */
-	public Object[] selectArray(String sql, String arrayKey, int maxRows)
-			throws SQLException {
+	public Object[] selectArray(String sql, String arrayKey, int maxRows) throws SQLException {
 
 		if (sql == null) {
 
@@ -2247,8 +2338,7 @@ public class Database {
 
 	}
 
-	public ArrayList top(String table, String primaryKey, boolean max,
-			String groupKey) throws SQLException {
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey) throws SQLException {
 
 		if (max) {
 
@@ -2260,29 +2350,23 @@ public class Database {
 
 	}
 
-	public ArrayList top(String table, String primaryKey, boolean max,
-			String groupKey, boolean orderDesc) throws SQLException {
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, boolean orderDesc) throws SQLException {
 
 		return top(table, primaryKey, max, groupKey, null, null, orderDesc, 0);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, boolean max,
-			String groupKey, boolean orderDesc, int maxRows)
-			throws SQLException {
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, boolean orderDesc, int maxRows) throws SQLException {
 
-		return top(table, primaryKey, max, groupKey, null, null, orderDesc,
-				maxRows);
+		return top(table, primaryKey, max, groupKey, null, null, orderDesc, maxRows);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, boolean max,
-			String groupKey, int maxRows) throws SQLException {
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, int maxRows) throws SQLException {
 
 		if (max) {
 
-			return top(table, primaryKey, max, groupKey, null, null, true,
-					maxRows);
+			return top(table, primaryKey, max, groupKey, null, null, true, maxRows);
 
 		}
 
@@ -2290,83 +2374,61 @@ public class Database {
 
 	}
 
-	public ArrayList top(String table, String primaryKey, boolean max,
-			String groupKey, Object[] groupValues) throws SQLException {
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, Object[] groupValues) throws SQLException {
 
 		if (max) {
 
-			return top(table, primaryKey, max, groupKey, groupValues, null,
-					true, 0);
+			return top(table, primaryKey, max, groupKey, groupValues, null, true, 0);
 
 		}
 
-		return top(table, primaryKey, max, groupKey, groupValues, null, false,
-				0);
+		return top(table, primaryKey, max, groupKey, groupValues, null, false, 0);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, boolean max,
-			String groupKey, Object[] groupValues, boolean orderDesc)
-			throws SQLException {
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, Object[] groupValues, boolean orderDesc) throws SQLException {
 
-		return top(table, primaryKey, max, groupKey, groupValues, null,
-				orderDesc, 0);
+		return top(table, primaryKey, max, groupKey, groupValues, null, orderDesc, 0);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, boolean max,
-			String groupKey, Object[] groupValues, boolean orderDesc,
-			int maxRows) throws SQLException {
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, Object[] groupValues, boolean orderDesc, int maxRows) throws SQLException {
 
-		return top(table, primaryKey, max, groupKey, groupValues, null,
-				orderDesc, maxRows);
+		return top(table, primaryKey, max, groupKey, groupValues, null, orderDesc, maxRows);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, boolean max,
-			String groupKey, Object[] groupValues, int maxRows)
-			throws SQLException {
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, Object[] groupValues, int maxRows) throws SQLException {
 
 		if (max) {
 
-			return top(table, primaryKey, max, groupKey, groupValues, null,
-					true, maxRows);
+			return top(table, primaryKey, max, groupKey, groupValues, null, true, maxRows);
 
 		}
 
-		return top(table, primaryKey, max, groupKey, groupValues, null, false,
-				maxRows);
+		return top(table, primaryKey, max, groupKey, groupValues, null, false, maxRows);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, boolean max,
-			String groupKey, Object[] groupValues, String topKey)
-			throws SQLException {
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, Object[] groupValues, String topKey) throws SQLException {
 
 		if (max) {
 
-			return top(table, primaryKey, max, groupKey, groupValues, topKey,
-					true, 0);
+			return top(table, primaryKey, max, groupKey, groupValues, topKey, true, 0);
 
 		}
 
-		return top(table, primaryKey, max, groupKey, groupValues, topKey,
-				false, 0);
+		return top(table, primaryKey, max, groupKey, groupValues, topKey, false, 0);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, boolean max,
-			String groupKey, Object[] groupValues, String topKey,
-			boolean orderDesc) throws SQLException {
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, Object[] groupValues, String topKey, boolean orderDesc) throws SQLException {
 
-		return top(table, primaryKey, max, groupKey, groupValues, topKey,
-				orderDesc, 0);
+		return top(table, primaryKey, max, groupKey, groupValues, topKey, orderDesc, 0);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, boolean max,
-			String groupKey, Object[] groupValues, String topKey,
-			boolean orderDesc, int maxRows) throws SQLException {
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, Object[] groupValues, String topKey, boolean orderDesc, int maxRows) throws SQLException {
 
 		if (table == null || primaryKey == null || groupKey == null) {
 
@@ -2380,8 +2442,7 @@ public class Database {
 
 		groupKey = groupKey.trim();
 
-		if (table.length() == 0 || primaryKey.length() == 0
-				|| groupKey.length() == 0) {
+		if (table.length() == 0 || primaryKey.length() == 0 || groupKey.length() == 0) {
 
 			return new ArrayList();
 
@@ -2583,29 +2644,23 @@ public class Database {
 
 		}
 
-		return select(table, primaryKey, list2.toArray(), topKey_, orderDesc,
-				maxRows);
+		return select(table, primaryKey, list2.toArray(), topKey_, orderDesc, maxRows);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, boolean max,
-			String groupKey, Object[] groupValues, String topKey, int maxRows)
-			throws SQLException {
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, Object[] groupValues, String topKey, int maxRows) throws SQLException {
 
 		if (max) {
 
-			return top(table, primaryKey, max, groupKey, groupValues, topKey,
-					true, maxRows);
+			return top(table, primaryKey, max, groupKey, groupValues, topKey, true, maxRows);
 
 		}
 
-		return top(table, primaryKey, max, groupKey, groupValues, topKey,
-				false, maxRows);
+		return top(table, primaryKey, max, groupKey, groupValues, topKey, false, maxRows);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, boolean max,
-			String groupKey, String topKey) throws SQLException {
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, String topKey) throws SQLException {
 
 		if (max) {
 
@@ -2617,97 +2672,75 @@ public class Database {
 
 	}
 
-	public ArrayList top(String table, String primaryKey, boolean max,
-			String groupKey, String topKey, boolean orderDesc)
-			throws SQLException {
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, String topKey, boolean orderDesc) throws SQLException {
 
 		return top(table, primaryKey, max, groupKey, null, topKey, orderDesc, 0);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, boolean max,
-			String groupKey, String topKey, boolean orderDesc, int maxRows)
-			throws SQLException {
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, String topKey, boolean orderDesc, int maxRows) throws SQLException {
 
-		return top(table, primaryKey, max, groupKey, null, topKey, orderDesc,
-				maxRows);
+		return top(table, primaryKey, max, groupKey, null, topKey, orderDesc, maxRows);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, boolean max,
-			String groupKey, String topKey, int maxRows) throws SQLException {
+	public ArrayList top(String table, String primaryKey, boolean max, String groupKey, String topKey, int maxRows) throws SQLException {
 
 		if (max) {
 
-			return top(table, primaryKey, max, groupKey, null, topKey, true,
-					maxRows);
+			return top(table, primaryKey, max, groupKey, null, topKey, true, maxRows);
 
 		}
 
-		return top(table, primaryKey, max, groupKey, null, topKey, false,
-				maxRows);
+		return top(table, primaryKey, max, groupKey, null, topKey, false, maxRows);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, String groupKey)
-			throws SQLException {
+	public ArrayList top(String table, String primaryKey, String groupKey) throws SQLException {
 
 		return top(table, primaryKey, true, groupKey, null, null, true, 0);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, String groupKey,
-			int maxRows) throws SQLException {
+	public ArrayList top(String table, String primaryKey, String groupKey, int maxRows) throws SQLException {
 
 		return top(table, primaryKey, true, groupKey, null, null, true, maxRows);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, String groupKey,
-			Object[] groupValues) throws SQLException {
+	public ArrayList top(String table, String primaryKey, String groupKey, Object[] groupValues) throws SQLException {
 
-		return top(table, primaryKey, true, groupKey, groupValues, null, true,
-				0);
+		return top(table, primaryKey, true, groupKey, groupValues, null, true, 0);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, String groupKey,
-			Object[] groupValues, int maxRows) throws SQLException {
+	public ArrayList top(String table, String primaryKey, String groupKey, Object[] groupValues, int maxRows) throws SQLException {
 
-		return top(table, primaryKey, true, groupKey, groupValues, null, true,
-				maxRows);
+		return top(table, primaryKey, true, groupKey, groupValues, null, true, maxRows);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, String groupKey,
-			Object[] groupValues, String topKey) throws SQLException {
+	public ArrayList top(String table, String primaryKey, String groupKey, Object[] groupValues, String topKey) throws SQLException {
 
-		return top(table, primaryKey, true, groupKey, groupValues, topKey,
-				true, 0);
+		return top(table, primaryKey, true, groupKey, groupValues, topKey, true, 0);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, String groupKey,
-			Object[] groupValues, String topKey, int maxRows)
-			throws SQLException {
+	public ArrayList top(String table, String primaryKey, String groupKey, Object[] groupValues, String topKey, int maxRows) throws SQLException {
 
-		return top(table, primaryKey, true, groupKey, groupValues, topKey,
-				true, maxRows);
+		return top(table, primaryKey, true, groupKey, groupValues, topKey, true, maxRows);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, String groupKey,
-			String topKey) throws SQLException {
+	public ArrayList top(String table, String primaryKey, String groupKey, String topKey) throws SQLException {
 
 		return top(table, primaryKey, true, groupKey, null, topKey, true, 0);
 
 	}
 
-	public ArrayList top(String table, String primaryKey, String groupKey,
-			String topKey, int maxRows) throws SQLException {
+	public ArrayList top(String table, String primaryKey, String groupKey, String topKey, int maxRows) throws SQLException {
 
-		return top(table, primaryKey, true, groupKey, null, topKey, true,
-				maxRows);
+		return top(table, primaryKey, true, groupKey, null, topKey, true, maxRows);
 
 	}
 
@@ -2717,8 +2750,7 @@ public class Database {
 
 	}
 
-	public void update(String table, HashMap set, HashMap where)
-			throws SQLException {
+	public void update(String table, HashMap set, HashMap where) throws SQLException {
 
 		update(table, set, where, true);
 
@@ -2733,8 +2765,7 @@ public class Database {
 	 * @param and
 	 * @throws SQLException
 	 */
-	public void update(String table, HashMap set, HashMap where, boolean and)
-			throws SQLException {
+	public void update(String table, HashMap set, HashMap where, boolean and) throws SQLException {
 
 		if (table == null || set == null || set.isEmpty()) {
 
@@ -2872,8 +2903,7 @@ public class Database {
 
 	}
 
-	public void update(String table, HashMap set, String whereKey,
-			Object whereValue) throws SQLException {
+	public void update(String table, HashMap set, String whereKey, Object whereValue) throws SQLException {
 
 		Object[] whereValues = null;
 
@@ -2900,8 +2930,7 @@ public class Database {
 	 * @param whereValues
 	 * @throws SQLException
 	 */
-	public void update(String table, HashMap set, String whereKey,
-			Object[] whereValues) throws SQLException {
+	public void update(String table, HashMap set, String whereKey, Object[] whereValues) throws SQLException {
 
 		if (table == null || set == null || set.isEmpty()) {
 
@@ -2987,8 +3016,7 @@ public class Database {
 
 			}
 
-			if (whereKey != null && whereValues != null
-					&& whereValues.length > 0) {
+			if (whereKey != null && whereValues != null && whereValues.length > 0) {
 
 				for (int i = 0; i < whereValues.length; i++) {
 
@@ -3030,22 +3058,19 @@ public class Database {
 
 	}
 
-	public void update(String table, String setKey, Object setValue)
-			throws SQLException {
+	public void update(String table, String setKey, Object setValue) throws SQLException {
 
 		update(table, setKey, setValue, null, true);
 
 	}
 
-	public void update(String table, String setKey, Object setValue,
-			HashMap where) throws SQLException {
+	public void update(String table, String setKey, Object setValue, HashMap where) throws SQLException {
 
 		update(table, setKey, setValue, where, true);
 
 	}
 
-	public void update(String table, String setKey, Object setValue,
-			HashMap where, boolean and) throws SQLException {
+	public void update(String table, String setKey, Object setValue, HashMap where, boolean and) throws SQLException {
 
 		if (table == null || setKey == null) {
 
@@ -3084,8 +3109,7 @@ public class Database {
 	 * @throws SQLException
 	 */
 
-	public void update(String table, String setKey, Object setValue,
-			String whereKey, Object whereValue) throws SQLException {
+	public void update(String table, String setKey, Object setValue, String whereKey, Object whereValue) throws SQLException {
 
 		HashMap where = null;
 
@@ -3113,8 +3137,7 @@ public class Database {
 	 * @param whereValues
 	 * @throws SQLException
 	 */
-	public void update(String table, String setKey, Object setValue,
-			String whereKey, Object[] whereValues) throws SQLException {
+	public void update(String table, String setKey, Object setValue, String whereKey, Object[] whereValues) throws SQLException {
 
 		if (table == null || setKey == null) {
 
