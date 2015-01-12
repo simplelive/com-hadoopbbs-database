@@ -24,7 +24,7 @@ public class Database {
 
 	public static Vector POOL = new Vector(); // 连接池
 
-	public static int SIZE = 2; // 连接池最多保存的连接数
+	public static int SIZE = 2; // 连接池空闲连接数，大多数系统设置为2即可，特别繁忙系统可设为3
 
 	public static String DRIVER; // 驱动类
 
@@ -55,7 +55,7 @@ public class Database {
 
 		} catch (Exception ex) {
 
-			SIZE = 10;
+			SIZE = 2;
 
 		}
 
@@ -107,7 +107,7 @@ public class Database {
 	 * 连接返回连接池或关闭
 	 * 
 	 * @param conn
-	 *          Connection
+	 *            Connection
 	 */
 	public void close(Connection conn) {
 
@@ -119,7 +119,7 @@ public class Database {
 	 * 关闭PreparedStatement
 	 * 
 	 * @param ps
-	 *          PreparedStatement
+	 *            PreparedStatement
 	 */
 	public void close(PreparedStatement ps) {
 
@@ -131,9 +131,9 @@ public class Database {
 	 * 关闭PreparedStatement和Connection
 	 * 
 	 * @param ps
-	 *          PreparedStatement
+	 *            PreparedStatement
 	 * @param conn
-	 *          Connection
+	 *            Connection
 	 */
 	public void close(PreparedStatement ps, Connection conn) {
 
@@ -145,9 +145,9 @@ public class Database {
 	 * 关闭PreparedStatement和ResultSet
 	 * 
 	 * @param rs
-	 *          ResultSet
+	 *            ResultSet
 	 * @param ps
-	 *          PreparedStatement
+	 *            PreparedStatement
 	 */
 	public void close(ResultSet rs, PreparedStatement ps) {
 
@@ -159,11 +159,11 @@ public class Database {
 	 * 关闭PreparedStatement、ResultSet和Connection
 	 * 
 	 * @param rs
-	 *          ResultSet
+	 *            ResultSet
 	 * @param ps
-	 *          PreparedStatement
+	 *            PreparedStatement
 	 * @param conn
-	 *          Connection
+	 *            Connection
 	 */
 	public void close(ResultSet rs, PreparedStatement ps, Connection conn) {
 
@@ -1091,9 +1091,9 @@ public class Database {
 	 * 获取指定列的最大值
 	 * 
 	 * @param table
-	 *          表名
+	 *            表名
 	 * @param key
-	 *          列名
+	 *            列名
 	 * @return
 	 * @throws SQLException
 	 */
@@ -1161,27 +1161,27 @@ public class Database {
 	 * @return
 	 * @throws SQLException
 	 * 
-	 *           HashMap PAGE = xxx.page(star, n);
+	 *             HashMap PAGE = xxx.page(star, n);
 	 * 
-	 *           ArrayList RS = null;
+	 *             ArrayList RS = null;
 	 * 
-	 *           int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
+	 *             int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
 	 * 
-	 *           if (PAGE != null) {
+	 *             if (PAGE != null) {
 	 * 
-	 *           RS = (ArrayList)PAGE.get("RS");
+	 *             RS = (ArrayList)PAGE.get("RS");
 	 * 
-	 *           PC = (Integer)PAGE.get("PC");
+	 *             PC = (Integer)PAGE.get("PC");
 	 * 
-	 *           PN = (Integer)PAGE.get("PN");
+	 *             PN = (Integer)PAGE.get("PN");
 	 * 
-	 *           RC = (Integer)PAGE.get("RC");
+	 *             RC = (Integer)PAGE.get("RC");
 	 * 
-	 *           RN = (Integer)PAGE.get("RN");
+	 *             RN = (Integer)PAGE.get("RN");
 	 * 
-	 *           SIZE = RS.size();
+	 *             SIZE = RS.size();
 	 * 
-	 *           }
+	 *             }
 	 */
 	public HashMap page(ResultSet rs, int pageSize) throws SQLException {
 
@@ -1204,27 +1204,27 @@ public class Database {
 	 * @return
 	 * @throws SQLException
 	 * 
-	 *           HashMap PAGE = xxx.page(star, n);
+	 *             HashMap PAGE = xxx.page(star, n);
 	 * 
-	 *           ArrayList RS = null;
+	 *             ArrayList RS = null;
 	 * 
-	 *           int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
+	 *             int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
 	 * 
-	 *           if (PAGE != null) {
+	 *             if (PAGE != null) {
 	 * 
-	 *           RS = (ArrayList)PAGE.get("RS");
+	 *             RS = (ArrayList)PAGE.get("RS");
 	 * 
-	 *           PC = (Integer)PAGE.get("PC");
+	 *             PC = (Integer)PAGE.get("PC");
 	 * 
-	 *           PN = (Integer)PAGE.get("PN");
+	 *             PN = (Integer)PAGE.get("PN");
 	 * 
-	 *           RC = (Integer)PAGE.get("RC");
+	 *             RC = (Integer)PAGE.get("RC");
 	 * 
-	 *           RN = (Integer)PAGE.get("RN");
+	 *             RN = (Integer)PAGE.get("RN");
 	 * 
-	 *           SIZE = RS.size();
+	 *             SIZE = RS.size();
 	 * 
-	 *           }
+	 *             }
 	 */
 	public HashMap page(ResultSet rs, int pageSize, int pageNo) throws SQLException {
 
@@ -1367,27 +1367,27 @@ public class Database {
 	 * @return
 	 * @throws SQLException
 	 * 
-	 *           HashMap PAGE = xxx.page(star, n);
+	 *             HashMap PAGE = xxx.page(star, n);
 	 * 
-	 *           ArrayList RS = null;
+	 *             ArrayList RS = null;
 	 * 
-	 *           int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
+	 *             int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
 	 * 
-	 *           if (PAGE != null) {
+	 *             if (PAGE != null) {
 	 * 
-	 *           RS = (ArrayList)PAGE.get("RS");
+	 *             RS = (ArrayList)PAGE.get("RS");
 	 * 
-	 *           PC = (Integer)PAGE.get("PC");
+	 *             PC = (Integer)PAGE.get("PC");
 	 * 
-	 *           PN = (Integer)PAGE.get("PN");
+	 *             PN = (Integer)PAGE.get("PN");
 	 * 
-	 *           RC = (Integer)PAGE.get("RC");
+	 *             RC = (Integer)PAGE.get("RC");
 	 * 
-	 *           RN = (Integer)PAGE.get("RN");
+	 *             RN = (Integer)PAGE.get("RN");
 	 * 
-	 *           SIZE = RS.size();
+	 *             SIZE = RS.size();
 	 * 
-	 *           }
+	 *             }
 	 */
 	public HashMap page(ResultSet rs, int pageSize, String pageNo) throws SQLException {
 
@@ -1423,27 +1423,27 @@ public class Database {
 	 * @return
 	 * @throws SQLException
 	 * 
-	 *           HashMap PAGE = xxx.page(star, n);
+	 *             HashMap PAGE = xxx.page(star, n);
 	 * 
-	 *           ArrayList RS = null;
+	 *             ArrayList RS = null;
 	 * 
-	 *           int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
+	 *             int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
 	 * 
-	 *           if (PAGE != null) {
+	 *             if (PAGE != null) {
 	 * 
-	 *           RS = (ArrayList)PAGE.get("RS");
+	 *             RS = (ArrayList)PAGE.get("RS");
 	 * 
-	 *           PC = (Integer)PAGE.get("PC");
+	 *             PC = (Integer)PAGE.get("PC");
 	 * 
-	 *           PN = (Integer)PAGE.get("PN");
+	 *             PN = (Integer)PAGE.get("PN");
 	 * 
-	 *           RC = (Integer)PAGE.get("RC");
+	 *             RC = (Integer)PAGE.get("RC");
 	 * 
-	 *           RN = (Integer)PAGE.get("RN");
+	 *             RN = (Integer)PAGE.get("RN");
 	 * 
-	 *           SIZE = RS.size();
+	 *             SIZE = RS.size();
 	 * 
-	 *           }
+	 *             }
 	 */
 	public HashMap page(String sql, int pageSize) throws SQLException {
 
@@ -1466,27 +1466,27 @@ public class Database {
 	 * @return
 	 * @throws SQLException
 	 * 
-	 *           HashMap PAGE = xxx.page(star, n);
+	 *             HashMap PAGE = xxx.page(star, n);
 	 * 
-	 *           ArrayList RS = null;
+	 *             ArrayList RS = null;
 	 * 
-	 *           int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
+	 *             int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
 	 * 
-	 *           if (PAGE != null) {
+	 *             if (PAGE != null) {
 	 * 
-	 *           RS = (ArrayList)PAGE.get("RS");
+	 *             RS = (ArrayList)PAGE.get("RS");
 	 * 
-	 *           PC = (Integer)PAGE.get("PC");
+	 *             PC = (Integer)PAGE.get("PC");
 	 * 
-	 *           PN = (Integer)PAGE.get("PN");
+	 *             PN = (Integer)PAGE.get("PN");
 	 * 
-	 *           RC = (Integer)PAGE.get("RC");
+	 *             RC = (Integer)PAGE.get("RC");
 	 * 
-	 *           RN = (Integer)PAGE.get("RN");
+	 *             RN = (Integer)PAGE.get("RN");
 	 * 
-	 *           SIZE = RS.size();
+	 *             SIZE = RS.size();
 	 * 
-	 *           }
+	 *             }
 	 */
 	public HashMap page(String sql, int pageSize, int pageNo) throws SQLException {
 
@@ -1539,27 +1539,27 @@ public class Database {
 	 * @return
 	 * @throws SQLException
 	 * 
-	 *           HashMap PAGE = xxx.page(star, n);
+	 *             HashMap PAGE = xxx.page(star, n);
 	 * 
-	 *           ArrayList RS = null;
+	 *             ArrayList RS = null;
 	 * 
-	 *           int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
+	 *             int PC = 0, PN = 0, RC = 0, RN = 0, SIZE = 0;
 	 * 
-	 *           if (PAGE != null) {
+	 *             if (PAGE != null) {
 	 * 
-	 *           RS = (ArrayList)PAGE.get("RS");
+	 *             RS = (ArrayList)PAGE.get("RS");
 	 * 
-	 *           PC = (Integer)PAGE.get("PC");
+	 *             PC = (Integer)PAGE.get("PC");
 	 * 
-	 *           PN = (Integer)PAGE.get("PN");
+	 *             PN = (Integer)PAGE.get("PN");
 	 * 
-	 *           RC = (Integer)PAGE.get("RC");
+	 *             RC = (Integer)PAGE.get("RC");
 	 * 
-	 *           RN = (Integer)PAGE.get("RN");
+	 *             RN = (Integer)PAGE.get("RN");
 	 * 
-	 *           SIZE = RS.size();
+	 *             SIZE = RS.size();
 	 * 
-	 *           }
+	 *             }
 	 */
 	public HashMap page(String sql, int pageSize, String pageNo) throws SQLException {
 
@@ -1619,7 +1619,7 @@ public class Database {
 	 * 获取ResultSet的记录集
 	 * 
 	 * @param rs
-	 *          ResultSet
+	 *            ResultSet
 	 * @return ArrayList 大小为0表示没有记录，每条记录使用HashMap封装，键名为大写的字段名，键值为字段值
 	 * @throws SQLException
 	 */
@@ -1737,17 +1737,17 @@ public class Database {
 	 * 按表名、字段名及字段值条件、条件是否为AND、排序字段名、排序是否为倒序、最大返回记录数等进行查询
 	 * 
 	 * @param table
-	 *          表名
+	 *            表名
 	 * @param where
-	 *          字段名及字段值条件
+	 *            字段名及字段值条件
 	 * @param and
-	 *          条件是否为AND
+	 *            条件是否为AND
 	 * @param orderKey
-	 *          排序字段名
+	 *            排序字段名
 	 * @param desc
-	 *          排序是否为倒序
+	 *            排序是否为倒序
 	 * @param maxRows
-	 *          最大返回记录数
+	 *            最大返回记录数
 	 * @return
 	 * @throws SQLException
 	 */
